@@ -12,6 +12,22 @@ No build step, so it works as-is on GitHub Pages.
 | Links | `index.html` (search for `TODO`) | Email address, Instagram / Dribbble / LinkedIn profiles, certificate URL. |
 | Projects page | `projects.html` | Placeholder only — the Figma file doesn't include this page yet. |
 
+## Photo not showing?
+
+Open `https://<your-username>.github.io/<repo>/assets/images/profile.png` directly in the browser.
+If that address gives a 404, the file isn't where the site looks for it. Check:
+
+- The file is inside the **`assets/images/`** folder, not in the repository root.
+- The name is exactly **`profile.png`** (lowercase). On Windows, turn on *View → File name extensions*: a file that looks like `profile.png` may really be `profile.png.png`.
+- The file is committed and pushed. GitHub Pages needs about a minute to update, then hard-refresh with Ctrl+Shift+R (Cmd+Shift+R on Mac).
+
+If the photo can't be found, the page shows a visible note with the expected path and prints the full URL in the browser console (F12).
+
+## Typewriter text
+
+The three phrases under "Experienced Storyteller &" are in `index.html`, in the `data-typed` attribute.
+Speeds (writing, erasing, how long a phrase stays, the blinking pause) are in the `TIMING` block at the top of the typewriter section in `js/main.js`.
+
 ## Publish on GitHub Pages
 
 1. Create a new repository on GitHub (name it `<your-username>.github.io` to get `https://<your-username>.github.io`, or any name to get `https://<your-username>.github.io/<repo-name>/`).

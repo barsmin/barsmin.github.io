@@ -30,6 +30,10 @@
   /*========== Buttons ==========*/
   /*Corner shape of buttons: 0 = square corners, 4rem = round "pill" corners*/
   --button-radius: 0;
+  /*Hard shadow aligned with the box edges (no stepped corners). Change 3px to make it thicker or thinner*/
+  --button-shadow: 3px 0 0 var(--black-color),
+                   0 3px 0 var(--black-color),
+                   3px 3px 0 var(--black-color);
 
   /*========== z index ==========*/
   --z-tooltip: 10;
@@ -173,15 +177,14 @@ img {
 .profile__buttons {
   display: flex;
   width: max-content;
-  padding: 2px;
   margin-bottom: 2.5rem;
   border: 2px solid var(--black-color);
   border-radius: var(--button-radius);
-  box-shadow: 2px 3px 0 var(--black-color);
+  box-shadow: var(--button-shadow);
 }
 
 .profile__button {
-  padding: .5rem 1.25rem;
+  padding: .625rem 1.375rem;
   border-radius: var(--button-radius);
   color: var(--title-color);
   font-size: var(--small-font-size);
@@ -412,7 +415,7 @@ img {
   padding: .5rem 1.25rem;
   border: 2px solid var(--black-color);
   border-radius: var(--button-radius);
-  box-shadow: 2px 3px 0 var(--black-color);
+  box-shadow: var(--button-shadow);
   color: var(--title-color);
   font-size: var(--small-font-size);
   font-weight: var(--font-medium);

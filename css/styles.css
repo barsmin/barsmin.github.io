@@ -1,0 +1,526 @@
+/* ==========================================================================
+   barsmin — portfolio
+   --------------------------------------------------------------------------
+   Layout system (taken from the Figma frames)
+     Desktop  ≥ 1200px : 8 columns · 80px margins · 24px gutters (max 1440px)
+     Tablet   900–1199 : 6 columns · up to 80px margins · 24px gutters
+     Mobile   < 900px  : single stacked column on a 2-column grid
+
+   Tip: press "G" on the page (or add ?grid to the URL) to overlay the grid.
+   ========================================================================== */
+
+
+/* 1. Design tokens
+   ========================================================================== */
+:root {
+  /* Colour — Figma "Color pallete" */
+  --c-dark: #111315;          /* Main dark: page background          */
+  --c-line: #202425;          /* Hairlines, active nav tab           */
+  --c-accent: #161b1c;        /* Main accent: hover surfaces         */
+  --c-lime: #b5ff6d;          /* Selective accent                    */
+  --c-lime-hover: #c9ff93;
+  --c-white: #ffffff;
+
+  /* Employer colours used on the experience titles */
+  --brand-esx: #eded02;
+  --brand-zupria: #f57200;
+  --brand-oracle: #ff0000;
+  --brand-blueberryad: #6e70e3;
+  --brand-smash: #7d2fb8;
+
+  /* Type */
+  --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-text: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+
+  --fs-heading: 40px;
+  --fs-company: 40px;
+  --fs-role: 24px;
+  --fs-body: 20px;
+  --fs-btn: 16px;
+  --lh: normal;               /* Figma uses "auto" line-height; raise to ~1.4 for easier reading */
+
+  /* Grid */
+  --cols: 8;
+  --gutter: 24px;
+  --margin: 80px;
+  --max: 1440px;
+  --pad: 24px;                /* inner padding of every bordered block */
+}
+
+
+/* 2. Base
+   ========================================================================== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  background: var(--c-dark);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-dark);
+  color: var(--c-white);
+  font-family: var(--font-text);
+  font-size: var(--fs-body);
+  font-weight: 300;
+  line-height: var(--lh);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, p, ul, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+img[hidden] { display: none; }
+strong { font-weight: 700; }
+
+:focus-visible {
+  outline: 2px solid var(--c-lime);
+  outline-offset: 2px;
+}
+
+.accent { color: var(--c-lime); }
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  z-index: 2000;
+  padding: 8px 12px;
+  background: var(--c-lime);
+  color: var(--c-dark);
+  font: 700 var(--fs-btn) / var(--lh) var(--font-display);
+}
+.skip-link:focus { top: 16px; }
+
+
+/* 3. Layout primitives
+   ========================================================================== */
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--margin);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+/* Empty bordered column: the vertical guide lines from the design */
+.col-line { border-inline: 1px solid var(--c-line); }
+
+
+/* 4. Buttons
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 8px 12px;
+  background: var(--c-lime);
+  color: var(--c-dark);
+  font: 700 var(--fs-btn) / var(--lh) var(--font-display);
+  transition: background-color .15s ease;
+}
+.btn img { flex: none; }
+.btn:hover { background: var(--c-lime-hover); }
+
+
+/* 5. Header
+   ========================================================================== */
+.site-header { height: 62px; }
+
+.site-header .container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo img { width: 88px; height: 20px; }
+
+.nav { display: flex; gap: 24px; }
+
+.nav a {
+  padding: 8px 12px;
+  background: var(--c-dark);
+  font: 700 var(--fs-btn) / var(--lh) var(--font-display);
+  transition: background-color .15s ease;
+}
+.nav a:hover { background: var(--c-accent); }
+.nav a[aria-current="page"] { background: var(--c-line); }
+
+
+/* 6. Hero
+   ========================================================================== */
+.hero { border-block: 1px solid var(--c-line); }
+
+.hero__grid { min-height: 398px; }
+
+.hero__text {
+  grid-column: 1 / span 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  padding-inline: var(--pad);
+  border-inline: 1px solid var(--c-line);
+}
+
+.hero__title {
+  font: 700 var(--fs-heading) / var(--lh) var(--font-display);
+}
+.hero__title > span { display: block; }
+
+.caret { animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero__col-a { grid-column: 5; }
+.hero__col-b { grid-column: 8; }
+.hero__col-c { grid-column: 6 / span 2; }     /* used by projects.html */
+
+/* Profile card: "Hi! I'm Cosmin" speech bubble + photo */
+.hero__card {
+  grid-column: 6 / span 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-inline: 1px solid var(--c-line);
+}
+
+.hero__hello {
+  flex: 1;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.hero__tail {
+  position: relative;
+  flex: none;
+  height: 30px;
+  background: url("../assets/icons/bubble-tail.svg") 35px 0 / 31px 31px no-repeat;
+}
+.hero__tail::before {                          /* the horizontal line under the bubble */
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: var(--c-line);
+}
+
+.hero__photo {
+  width: 100%;
+  height: auto;                                /* let aspect-ratio drive the height, not the HTML attribute */
+  aspect-ratio: 300 / 306;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+
+/* 7. Sidebar cards (skills, tools, education, credentials)
+   ========================================================================== */
+.sidebar {
+  grid-column: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: var(--pad);
+  border-inline: 1px solid var(--c-line);
+  border-top: 1px solid var(--c-line);
+}
+.card:first-child { border-top: 0; }
+.card:last-child { flex: 1; }                  /* keeps the column lines running to the bottom */
+
+.heading {
+  color: var(--c-lime);
+  font: 700 var(--fs-heading) / var(--lh) var(--font-display);
+}
+
+.list { display: flex; flex-direction: column; gap: 16px; }
+
+.list--tools li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.list--tools img { flex: none; }
+.list--tools span { white-space: nowrap; }
+
+.list--items { gap: 24px; }
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.item > img { flex: none; }
+
+.item__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-wrap: break-word;
+}
+.item__title { font-weight: 700; }
+
+/* A narrow sidebar (laptops < ~1350px) lets the button label wrap instead of overflowing */
+.item .btn { text-align: left; }
+
+.spacer { grid-column: 3 / span 2; }
+
+
+/* 8. Experience
+   ========================================================================== */
+.experience {
+  grid-column: 5 / span 4;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: var(--pad);
+  border-inline: 1px solid var(--c-line);
+}
+
+.job {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-block: 12px;
+  border-top: 1px solid var(--c-line);
+}
+
+.job__company {
+  font: 400 var(--fs-company) / var(--lh) var(--font-display);
+  overflow-wrap: anywhere;
+}
+.job--esx .job__company        { color: var(--brand-esx); }
+.job--zupria .job__company     { color: var(--brand-zupria); }
+.job--oracle .job__company     { color: var(--brand-oracle); }
+.job--blueberryad .job__company{ color: var(--brand-blueberryad); }
+.job--smash .job__company      { color: var(--brand-smash); }
+
+.job__head { display: flex; flex-direction: column; gap: 6px; }
+.job__role { font-size: var(--fs-role); font-weight: 700; }
+
+.job__body { display: flex; flex-direction: column; gap: 12px; }
+.job__text { display: grid; gap: 1.2em; }      /* one blank line between paragraphs, as in the design */
+
+.label { margin-inline-end: .5em; }
+
+
+/* 9. Call to action + social row
+   ========================================================================== */
+.cta { border-block: 1px solid var(--c-line); }
+
+.cta__grid { min-height: 398px; }
+
+.cta__text {
+  grid-column: 1 / span 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  padding-inline: var(--pad);
+  border-inline: 1px solid var(--c-line);
+}
+
+.cta__title { font: 700 var(--fs-heading) / var(--lh) var(--font-display); }
+
+.social {
+  grid-column: 5 / span 4;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+.social li { display: flex; }
+
+.social a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-inline: 1px solid var(--c-line);
+  transition: background-color .15s ease;
+}
+.social a:hover { background: var(--c-accent); }
+.social img { flex: none; }
+
+.social .social__top {
+  background: var(--c-lime);
+  color: var(--c-dark);
+  font: 700 var(--fs-btn) / var(--lh) var(--font-display);
+  text-align: center;
+}
+.social .social__top:hover { background: var(--c-lime-hover); }
+.social__top span { white-space: nowrap; }
+
+
+/* 10. Footer
+   ========================================================================== */
+.site-footer {
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 16px;
+  text-align: center;
+}
+
+
+/* 11. Tablet — 6 columns
+   ========================================================================== */
+@media (max-width: 1199px) {
+  :root {
+    --cols: 6;
+    --margin: clamp(48px, 7.2vw, 80px);
+  }
+
+  .hero__col-a,
+  .hero__col-b,
+  .hero__col-c,
+  .spacer { display: none; }
+
+  .hero__card   { grid-column: 5 / span 2; }
+  .experience   { grid-column: 3 / span 4; }
+  .cta__text    { grid-column: 1 / span 2; }
+  .social       { grid-column: 3 / span 4; }
+}
+
+
+/* 12. Mobile — stacked, on a 2-column grid
+   ========================================================================== */
+@media (max-width: 899px) {
+  :root {
+    --cols: 2;
+    --margin: clamp(24px, calc((100% - 302px) / 2), 80px);   /* 45.5px on a 393px phone */
+    --fs-company: 36px;
+    --fs-role: 20px;
+    --fs-body: 16px;
+    --fs-btn: 14px;
+  }
+
+  /* Keep the stacked column readable on large phones / portrait tablets */
+  .container { max-width: calc(480px + 2 * var(--margin)); }
+
+  /* Every block spans the full (2-column) width */
+  .hero__grid > *,
+  .main-grid > *,
+  .cta__grid > * { grid-column: 1 / -1; }
+
+  .hero__col-a,
+  .hero__col-b,
+  .hero__col-c,
+  .spacer { display: none; }
+
+  /* Header */
+  .site-header { height: 48px; border-bottom: 1px solid var(--c-line); }
+  .logo img { width: 44px; height: 10px; }
+  .nav { gap: 12px; }
+  .nav a { padding: 4px 6px; }
+
+  /* Hero: photo first, then the text */
+  .hero { border-block: 0; }
+  .hero__grid { min-height: 0; }
+  .hero__card { order: -1; min-height: 398px; }
+  .hero__text {
+    min-height: 398px;
+    padding-inline: 0;
+    border-inline: 0;
+  }
+
+  /* CTA */
+  .cta { border-block: 0; }
+  .cta__grid { min-height: 0; }
+  .cta__text {
+    min-height: 398px;
+    padding-inline: 0;
+    border-inline: 0;
+  }
+
+  .social {
+    height: 138px;
+    column-gap: 12px;
+  }
+  .social__top span { white-space: normal; }
+
+  /* Full-bleed horizontal rules between the stacked sections */
+  .hero__text,
+  .sidebar,
+  .experience,
+  .cta__text,
+  .social { position: relative; }
+
+  .hero__text::before,
+  .sidebar::before,
+  .experience::before,
+  .cta__text::before,
+  .social::before,
+  .social::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100vw;
+    height: 1px;
+    background: var(--c-line);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .social::after { top: auto; bottom: 0; }
+
+  .site-footer { height: 48px; }
+}
+
+@media (max-width: 359px) {                    /* very small phones: keep the nav on one line */
+  .nav { gap: 6px; }
+  .nav a { padding-inline: 4px; font-size: 13px; }
+}
+
+
+/* 13. Accessibility — reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .caret { animation: none; }
+  .btn, .nav a, .social a { transition: none; }
+}
+
+
+/* 14. Dev helper — grid overlay (toggle with the "G" key or ?grid)
+   ========================================================================== */
+.guides {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+.guides .container,
+.guides .grid { height: 100%; }
+.guides i { background: rgb(255 0 80 / .12); }
+
+@media (max-width: 1199px) { .guides i:nth-child(n + 7) { display: none; } }
+@media (max-width: 899px)  { .guides i:nth-child(n + 3) { display: none; } }

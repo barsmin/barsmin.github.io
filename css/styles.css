@@ -45,6 +45,7 @@
   --margin: 80px;
   --max: 1440px;
   --pad: 24px;                /* inner padding of every bordered block */
+  --ease: cubic-bezier(.2, .65, .2, 1);   /* soft landing, used by every animation */
 }
 
 
@@ -227,18 +228,31 @@ strong { font-weight: 700; }
   font-size: 20px;
 }
 
+/* The line under the bubble runs across the card, dips into a notch (down, then back up
+   to the right) and carries on, exactly like the Figma vector. */
 .hero__tail {
   position: relative;
   flex: none;
   height: 30px;
-  background: url("../assets/icons/bubble-tail.svg") 35px 0 / 31px 31px no-repeat;
+  background: linear-gradient(var(--c-line), var(--c-line)) right top / 34px 1px no-repeat;   /* line after the notch */
 }
-.hero__tail::before {                          /* the horizontal line under the bubble */
+.hero__tail::before {                          /* line before the notch */
   content: "";
   position: absolute;
-  inset: 0 0 auto 0;
+  top: 0;
+  left: 0;
+  right: 65px;
   height: 1px;
   background: var(--c-line);
+}
+.hero__tail::after {                           /* the notch itself */
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 34px;
+  width: 31px;
+  height: 31px;
+  background: url("../assets/icons/bubble-tail.svg") no-repeat;
 }
 
 /* Shown by main.js only if the photo can't be found, so a wrong path is never silent */
@@ -531,12 +545,70 @@ strong { font-weight: 700; }
 }
 
 
+/* 12b. Motion — hover effects and scroll reveal
+   ========================================================================== */
+
+/* Tools: the name slides a little to the right */
+.list--tools span { transition: transform .25s var(--ease); }
+
+/* Experience: the block opens up above and below. Padding grows and an equal negative margin
+   cancels it, so the text and everything around it stay exactly where they are. */
+.job {
+  --brand: var(--c-line);
+  transition:
+    padding .4s var(--ease),
+    margin .4s var(--ease),
+    background-color .4s var(--ease),
+    border-top-color .4s var(--ease);
+}
+.job--esx          { --brand: var(--brand-esx); }
+.job--zupria       { --brand: var(--brand-zupria); }
+.job--oracle       { --brand: var(--brand-oracle); }
+.job--blueberryad  { --brand: var(--brand-blueberryad); }
+.job--smash        { --brand: var(--brand-smash); }
+
+/* Back to top: the arrow lifts */
+.social__top img { transition: transform .3s var(--ease); }
+.social__top:focus-visible img { transform: translateY(-6px); }
+
+/* Hover effects only on devices that can hover (a tap on a phone would leave them "stuck") */
+@media (hover: hover) and (pointer: fine) {
+  .list--tools li:hover span { transform: translateX(8px); }
+
+  .job:hover {
+    padding: 22px 12px;
+    margin: -10px -12px;
+    background-color: var(--c-accent);
+    border-top-color: var(--brand);                                           /* fallback */
+    border-top-color: color-mix(in srgb, var(--brand) 60%, var(--c-line));
+  }
+
+  .social__top:hover img { transform: translateY(-6px); }
+}
+
+/* Scroll reveal: blocks rise in softly as they enter the screen.
+   Groups are marked with data-reveal-group in the HTML; each direct child is a block.
+   Hidden only when scripts run and motion is welcome, so nothing is ever lost. */
+[data-reveal-group]                     { --step: 80ms; }                      /* delay between neighbouring blocks */
+.experience[data-reveal-group]          { --step: 0ms; }                       /* long blocks: no stagger */
+[data-reveal-group] > :nth-child(2)     { --reveal-delay: var(--step); }
+[data-reveal-group] > :nth-child(3)     { --reveal-delay: calc(var(--step) * 2); }
+[data-reveal-group] > :nth-child(4)     { --reveal-delay: calc(var(--step) * 3); }
+[data-reveal-group] > :nth-child(n+5)   { --reveal-delay: calc(var(--step) * 4); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal-group] > :not(.is-visible) { opacity: 0; transform: translateY(18px); }
+  .js [data-reveal-group] > .is-visible       { animation: reveal .7s var(--ease) var(--reveal-delay, 0ms) backwards; }
+}
+@keyframes reveal { from { opacity: 0; transform: translateY(18px); } }
+
+
 /* 13. Accessibility — reduced motion
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .caret { animation: none; }
-  .btn, .nav a, .social a { transition: none; }
+  .btn, .nav a, .social a, .social__top img, .list--tools span, .job { transition: none; }
 }
 
 

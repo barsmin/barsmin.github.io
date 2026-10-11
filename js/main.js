@@ -37,6 +37,7 @@
       const note = document.createElement("p");
       note.className = "hero__missing";
       note.textContent = "photo not found — add " + candidates[0];
+      note.classList.add("is-visible");               // added after the scroll observer started, so show it directly
       photo.replaceWith(note);
     };
 
@@ -106,7 +107,24 @@
   }
 
 
-  // 4. Layout-grid overlay: press "G" (or open the page with ?grid) to compare against Figma
+  // 4. Scroll reveal: blocks rise in softly as they enter the screen (the animation itself lives in the CSS)
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.05 });
+
+    document.querySelectorAll("[data-reveal-group] > *").forEach((block) => observer.observe(block));
+  } else {
+    document.documentElement.classList.remove("js");   // nothing to animate: show everything
+  }
+  document.documentElement.setAttribute("data-reveal-ready", "");   // tells the page's 4 s safety timer that all is well
+
+
+  // 5. Layout-grid overlay: press "G" (or open the page with ?grid) to compare against Figma
   let guides = null;
 
   const toggleGrid = () => {

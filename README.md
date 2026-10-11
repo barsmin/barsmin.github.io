@@ -28,6 +28,12 @@ If the photo can't be found, the page shows a visible note with the expected pat
 The three phrases under "Experienced Storyteller &" are in `index.html`, in the `data-typed` attribute.
 Speeds (writing, erasing, how long a phrase stays, the blinking pause) are in the `TIMING` block at the top of the typewriter section in `js/main.js`.
 
+## Hover and scroll effects
+
+- Tools names, experience blocks and the "back to top" arrow react to the mouse (only on devices that can hover). They live in section 12b of `css/styles.css`.
+- Blocks rise in softly while you scroll. To include a new block, put `data-reveal-group` on its container: every direct child is revealed. Speed and distance are in section 12b (`@keyframes reveal`).
+- Visitors with "reduce motion" turned on get none of the animations.
+
 ## Publish on GitHub Pages
 
 1. Create a new repository on GitHub (name it `<your-username>.github.io` to get `https://<your-username>.github.io`, or any name to get `https://<your-username>.github.io/<repo-name>/`).

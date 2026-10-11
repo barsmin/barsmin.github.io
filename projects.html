@@ -3,6 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Lets the scroll animation start hidden without a flash. If main.js hasn't confirmed within 4 s,
+       the class is removed again and everything simply shows. -->
+  <script>
+    document.documentElement.classList.add("js");
+    setTimeout(function () {
+      if (!document.documentElement.hasAttribute("data-reveal-ready")) document.documentElement.classList.remove("js");
+    }, 4000);
+  </script>
   <title>Projects — Cosmin</title>
   <meta name="description" content="Selected projects by Cosmin (barsmin).">
   <meta name="theme-color" content="#111315">
@@ -33,7 +42,7 @@
     <!-- PLACEHOLDER: this page isn't designed in Figma yet. Replace this hero with your project grid. -->
     <section class="hero" aria-labelledby="page-title">
       <div class="container grid hero__grid">
-        <div class="hero__text">
+        <div class="hero__text" data-reveal-group>
           <h1 id="page-title" class="hero__title"><span class="accent">projects.</span></h1>
           <p class="hero__lead">case studies are coming soon.</p>
           <a class="btn" href="index.html">back to home</a>

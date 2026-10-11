@@ -4,6 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Lets the scroll animation start hidden without a flash. If main.js hasn't confirmed within 4 s,
+       the class is removed again and everything simply shows. -->
+  <script>
+    document.documentElement.classList.add("js");
+    setTimeout(function () {
+      if (!document.documentElement.hasAttribute("data-reveal-ready")) document.documentElement.classList.remove("js");
+    }, 4000);
+  </script>
+
   <title>Cosmin — Experienced storyteller &amp; UX designer</title>
   <meta name="description" content="Portfolio of Cosmin (barsmin): senior product designer and UX/UI designer skilled in graphics, brand development, typography, Adobe Creative Suite and Figma.">
   <meta name="theme-color" content="#111315">
@@ -45,7 +54,7 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="container grid hero__grid">
 
-        <div class="hero__text">
+        <div class="hero__text" data-reveal-group>
           <h1 id="hero-title" class="hero__title">
             <span>Experienced Storyteller &amp;</span>
             <!-- Typewriter line: edit the 3 phrases in data-typed (the first one is the text shown before the animation starts) -->
@@ -64,7 +73,7 @@
 
         <div class="col-line hero__col-a" aria-hidden="true"></div>
 
-        <figure class="hero__card">
+        <figure class="hero__card" data-reveal-group>
           <figcaption class="hero__hello">Hi! I’m Cosmin</figcaption>
           <div class="hero__tail" aria-hidden="true"></div>
           <!-- Photo: assets/images/profile.png (PNG exported from the "profile 2" layer in Figma, 2x) -->
@@ -80,7 +89,7 @@
 
       <aside class="sidebar" aria-label="Skills, tools, education and credentials">
 
-        <section class="card" aria-labelledby="skills-title">
+        <section class="card" data-reveal-group aria-labelledby="skills-title">
           <h2 id="skills-title" class="heading">skills.</h2>
           <ul class="list">
             <li>user experience design</li>
@@ -93,7 +102,7 @@
           </ul>
         </section>
 
-        <section class="card" aria-labelledby="tools-title">
+        <section class="card" data-reveal-group aria-labelledby="tools-title">
           <h2 id="tools-title" class="heading">tools.</h2>
           <ul class="list list--tools">
             <li><img src="assets/icons/figma.svg" alt="" width="20" height="20"><span>figma</span></li>
@@ -104,7 +113,7 @@
           </ul>
         </section>
 
-        <section class="card" aria-labelledby="education-title">
+        <section class="card" data-reveal-group aria-labelledby="education-title">
           <h2 id="education-title" class="heading">education.</h2>
           <ul class="list list--items">
             <li class="item">
@@ -124,7 +133,7 @@
           </ul>
         </section>
 
-        <section class="card" aria-labelledby="credentials-title">
+        <section class="card" data-reveal-group aria-labelledby="credentials-title">
           <h2 id="credentials-title" class="heading">credentials.</h2>
           <ul class="list list--items">
             <li class="item">
@@ -132,8 +141,7 @@
               <div class="item__body">
                 <p class="item__title">IxDF - The Interaction Design Fundation</p>
                 <p>Mobile User Experience (UX) Design</p>
-                <!-- TODO: replace with the link to your certificate -->
-                <a class="btn" href="https://www.interaction-design.org/" target="_blank" rel="noopener noreferrer">
+                <a class="btn" href="https://ixdf.org/members/cosmin-baraghin/certificate/course/e4401d6c-dab7-4d1d-9fdc-f43ecb74e043" target="_blank" rel="noopener noreferrer">
                   show certification
                   <img src="assets/icons/external.svg" alt="" width="20" height="20">
                 </a>
@@ -145,7 +153,7 @@
 
       <div class="col-line spacer" aria-hidden="true"></div>
 
-      <section class="experience" aria-labelledby="experience-title">
+      <section class="experience" data-reveal-group aria-labelledby="experience-title">
         <h2 id="experience-title" class="heading">experience.</h2>
 
         <article class="job job--esx">
@@ -229,18 +237,17 @@
     <section class="cta" aria-labelledby="cta-title">
       <div class="container grid cta__grid">
 
-        <div class="cta__text">
+        <div class="cta__text" data-reveal-group>
           <h2 id="cta-title" class="cta__title">Ready to Bring <span class="accent">Your Vision</span> to Life?</h2>
           <p>i'd love to hear about it.</p>
-          <!-- TODO: replace with your real email address -->
-          <a class="btn" href="mailto:hello@example.com?subject=Project%20inquiry">
+          <a class="btn" href="mailto:barsmin@gmail.com?subject=Project%20inquiry">
             let’s get started
             <img src="assets/icons/mail.svg" alt="" width="20" height="20">
           </a>
         </div>
 
         <!-- TODO: replace the three profile URLs with your own -->
-        <ul class="social" aria-label="Social profiles and back to top">
+        <ul class="social" data-reveal-group aria-label="Social profiles and back to top">
           <li><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="assets/icons/instagram.svg" alt="" width="40" height="40"></a></li>
           <li><a href="https://dribbble.com/" target="_blank" rel="noopener noreferrer" aria-label="Dribbble"><img src="assets/icons/dribbble.svg" alt="" width="40" height="40"></a></li>
           <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><img src="assets/icons/linkedin.svg" alt="" width="40" height="40"></a></li>

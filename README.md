@@ -12,9 +12,11 @@ No build step, so it works as-is on GitHub Pages: https://barsmin.github.io/
 
 ## Profile photo
 
-The photo exists in three formats in `assets/images/`: `profile.avif` (~20 KB), `profile.webp` (~30 KB) and `profile.png` (~45 KB, a smaller fallback for very old browsers). The page uses a `<picture>` tag, so every browser downloads only the smallest one it understands (the old PNG was 160 KB). The CV uses the same files.
+The photo exists in three formats in `assets/images/`: `profile.avif` (~20 KB), `profile.webp` (~30 KB) and `profile.png` (~45 KB, a smaller fallback for very old browsers). The page uses a `<picture>` tag, so every browser downloads only the smallest one it understands (the old PNG was 160 KB).
 
-All three are the same image with a transparent background (720 px wide; the PNG fallback 480 px). To change the photo, send the new PNG (transparent background, at least ~1200 px wide) and re-export all three, otherwise browsers will keep showing the old one from the first format they support. The photo area on the page is 300×306 px (about 478 px wide on tablets), so 720 px is already sharp on phones and retina screens.
+The CV uses its own photo, `profile-cv.webp` (~18 KB): you alone, without the lime shape, in black and white.
+
+The three site files are the same image with a transparent background (720 px wide; the PNG fallback 480 px). To change the photo, send the new PNG (transparent background, at least ~1200 px wide) and re-export all of them (or send it to me and I'll do it), otherwise browsers will keep showing the old one from the first format they support. The photo area on the page is 300×306 px (about 478 px wide on tablets), so 720 px is already sharp on phones and retina screens.
 
 Photo not showing? Open `https://barsmin.github.io/assets/images/profile.png` directly. If that is a 404, check that the files are inside `assets/images/`, named exactly like above (on Windows turn on *View → File name extensions*) and pushed. GitHub Pages needs about a minute, then hard-refresh (Ctrl/Cmd + Shift + R).
 
@@ -81,7 +83,7 @@ css/cv.css            the CV: white A4 sheet, scaling and print rules (self-cont
 js/main.js            footer year, contact button, typewriter, scroll reveal
 js/cv.js              builds the CV from index.html; phone and address live here
 assets/icons/         SVGs exported from Figma (logo.svg = full logo, logo-mobile.svg = small "ba" mark used on phones)
-assets/images/        profile.avif / .webp / .png (the same photo in three formats)
+assets/images/        profile.avif / .webp / .png (site photo in three formats), profile-cv.webp (CV photo)
 favicon.svg           browser-tab icon (the "ba" mark)
 apple-touch-icon.png  iPhone home-screen icon
 ```

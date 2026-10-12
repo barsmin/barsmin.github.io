@@ -6,6 +6,8 @@
   // Only these two details belong to the CV alone — edit them here.
   const PHONE = { label: "phone", text: "+40 754 577 311", href: "tel:+40754577311" };
   const ADDRESS = { label: "address", text: "Bucharest, Romania" };
+  // The CV photo: you alone (no lime shape), in black and white. Not the same file as on the site.
+  const PHOTO = "assets/images/profile-cv.webp";
 
   // Everything must fit on ONE page: the text and spacing of the columns shrink (never below K_MIN)
   // until it does. Only if even that is not enough do the last jobs move to a second page.
@@ -85,15 +87,12 @@
     const figure = el("figure", "cv-photo");
     const hello = el("figcaption", "cv-photo__hello");
     hello.textContent = site.querySelector(".hero__hello").textContent.trim();
-    // the same <picture> as the site (AVIF / WebP / PNG), so the small files are used here too
-    const picture = document.importNode(photo.closest("picture") || photo, true);
-    const image = picture.matches("img") ? picture : picture.querySelector("img");
-    image.removeAttribute("class");
-    image.removeAttribute("fetchpriority");
+    const image = el("img");
+    image.src = PHOTO;
     image.alt = photo.getAttribute("alt") || "";
     image.width = 300;
     image.height = 262;
-    figure.append(hello, el("div", "cv-photo__tail"), picture);
+    figure.append(hello, el("div", "cv-photo__tail"), image);
     head.append(intro, figure);
 
     // contact

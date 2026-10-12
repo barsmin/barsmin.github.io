@@ -1,54 +1,33 @@
 (() => {
   "use strict";
 
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+
   // 1. Footer year — always current
   const year = document.querySelector("[data-year]");
   if (year) year.textContent = new Date().getFullYear();
 
 
-  // 2. Profile photo
-  //    If assets/images/profile.png is not found it tries a few common alternatives
-  //    (GitHub Pages is case-sensitive, and Windows can hide a ".png.png" double extension),
-  //    then shows a visible note with the expected path instead of failing silently.
-  const photo = document.querySelector(".hero__photo");
-  if (photo) {
-    const dir = "assets/images/";
-    const candidates = [
-      dir + "profile.png",
-      dir + "Profile.png",
-      dir + "profile.PNG",
-      dir + "profile.png.png",
-      dir + "profile%202.png",            // Figma's default export name for the "profile 2" layer
-      dir + "profile.jpg",
-      dir + "profile.jpeg",
-      dir + "profile.webp",
-      "profile.png",                      // uploaded to the repository root by mistake
-    ];
-    let attempt = 0;
-
-    const onError = () => {
-      attempt += 1;
-      if (attempt < candidates.length) {
-        photo.src = candidates[attempt];
-        return;
-      }
-      const expected = new URL(candidates[0], location.href).href;
-      console.warn("[portfolio] Profile photo not found. Expected it at: " + expected);
-      const note = document.createElement("p");
-      note.className = "hero__missing";
-      note.textContent = "photo not found — add " + candidates[0];
-      note.classList.add("is-visible");               // added after the scroll observer started, so show it directly
-      photo.replaceWith(note);
-    };
-
-    photo.addEventListener("error", onError);
-    if (photo.complete && photo.naturalWidth === 0) onError();   // it already failed before this script ran
+  // 2. Contact button: on a computer it opens a Gmail compose window, because a plain mailto link
+  //    often does nothing useful when no mail app is set up. Phones keep the normal mailto link.
+  //    (To use mailto everywhere, delete this block.)
+  const compose = document.querySelector("[data-compose]");
+  if (compose && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const mailto = new URL(compose.href);
+    compose.href = "https://mail.google.com/mail/?" + new URLSearchParams({
+      view: "cm",
+      fs: "1",
+      to: mailto.pathname,
+      su: mailto.searchParams.get("subject") || "",
+    });
+    compose.target = "_blank";
+    compose.rel = "noopener noreferrer";
   }
 
 
   // 3. Typewriter: writes a phrase, holds it, erases it, blinks for a moment, then writes the next one
   const typed = document.querySelector("[data-typed]");
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (typed && !reduceMotion) {
     // All times in milliseconds — change these to make it faster or slower
@@ -128,28 +107,4 @@
   //    the others close in by exactly the same total (the page below never moves)
   const experience = document.querySelector(".experience");
   if (experience) experience.style.setProperty("--jobs", experience.querySelectorAll(".job").length);
-
-
-  // 6. Layout-grid overlay: press "G" (or open the page with ?grid) to compare against Figma
-  let guides = null;
-
-  const toggleGrid = () => {
-    if (!guides) {
-      guides = document.createElement("div");
-      guides.className = "guides";
-      guides.setAttribute("aria-hidden", "true");
-      guides.innerHTML = '<div class="container grid">' + "<i></i>".repeat(8) + "</div>";
-      document.body.append(guides);
-      return;
-    }
-    guides.hidden = !guides.hidden;
-  };
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key.toLowerCase() !== "g" || e.metaKey || e.ctrlKey || e.altKey) return;
-    if (/^(input|textarea|select)$/i.test(e.target.tagName)) return;
-    toggleGrid();
-  });
-
-  if (new URLSearchParams(location.search).has("grid")) toggleGrid();
 })();

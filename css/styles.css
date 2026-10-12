@@ -70,15 +70,15 @@ body {
   font-weight: 300;
   line-height: var(--lh);
   overflow-x: clip;
+  cursor: default;                              /* plain arrow everywhere, never the text cursor… */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, p, ul, figure { margin: 0; }
 ul { padding: 0; list-style: none; }
-a { color: inherit; text-decoration: none; }
+a { color: inherit; text-decoration: none; cursor: pointer; }   /* …except on links and buttons: the hand */
 img { display: block; max-width: 100%; }
-img[hidden] { display: none; }
 strong { font-weight: 700; }
 
 :focus-visible {
@@ -253,19 +253,6 @@ strong { font-weight: 700; }
   background: url("../assets/icons/bubble-tail.svg") no-repeat;
 }
 
-/* Shown by main.js only if the photo can't be found, so a wrong path is never silent */
-.hero__missing {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 300 / 306;
-  padding: 16px;
-  border-top: 1px dashed var(--c-lime);
-  color: var(--c-lime);
-  font-size: 14px;
-  text-align: center;
-  overflow-wrap: anywhere;
-}
-
 .hero__photo {
   width: 100%;
   height: auto;                                /* let aspect-ratio drive the height, not the HTML attribute */
@@ -308,6 +295,7 @@ strong { font-weight: 700; }
 }
 .list--tools img { flex: none; }
 .list--tools span { white-space: nowrap; }
+.list--skills span { display: inline-block; }   /* lets the hover slide work, like on the tools */
 
 .list--items { gap: 24px; }
 
@@ -355,6 +343,7 @@ strong { font-weight: 700; }
   padding-block: var(--job-pad);
   border-top: 1px solid var(--c-line);
 }
+.job:first-of-type { border-top: 0; }           /* the lines separate the jobs; none above the first */
 
 .job__company {
   font: 400 var(--fs-company) / var(--lh) var(--font-display);
@@ -554,10 +543,9 @@ strong { font-weight: 700; }
 /* 12b. Motion — hover effects and scroll reveal
    ========================================================================== */
 
-/* Tools: the name slides a little to the right.
-   The pointer stays a normal arrow (no text cursor) over the list and the experience blocks. */
-.list--tools li { cursor: default; }
-.list--tools span { transition: transform .25s var(--ease); }
+/* Skills and tools: the name slides a little to the right */
+.list--tools span,
+.list--skills span { transition: transform .25s var(--ease); }
 
 /* Experience: the hovered block opens up 36px above and below its text (no colour change) and the
    other blocks close in by the same total, so the section keeps its height and nothing below it
@@ -603,7 +591,6 @@ strong { font-weight: 700; }
 .job:nth-of-type(8) { --o: var(--o8); }
 
 .job {
-  cursor: default;
   padding-block: calc(
     var(--job-pad) + var(--job-open) / var(--div) * (var(--o, 0) - (var(--sum) - var(--o, 0)) / (var(--jobs) - 1))
   );
@@ -618,7 +605,8 @@ strong { font-weight: 700; }
 
 /* Hover effects only on devices that can hover (a tap on a phone would leave them "stuck") */
 @media (hover: hover) and (pointer: fine) {
-  .list--tools li:hover span { transform: translateX(8px); }
+  .list--tools li:hover span,
+  .list--skills li:hover span { transform: translateX(8px); }
 
   .experience:has(.job:nth-of-type(1):hover) { --o1: 1; }
   .experience:has(.job:nth-of-type(2):hover) { --o2: 1; }
@@ -655,21 +643,5 @@ strong { font-weight: 700; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .caret { animation: none; }
-  .nav a, .social a, .btn img, .social__top img, .list--tools span, .experience { transition: none; }
+  .nav a, .social a, .btn img, .social__top img, .list--tools span, .list--skills span, .experience { transition: none; }
 }
-
-
-/* 14. Dev helper — grid overlay (toggle with the "G" key or ?grid)
-   ========================================================================== */
-.guides {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  pointer-events: none;
-}
-.guides .container,
-.guides .grid { height: 100%; }
-.guides i { background: rgb(255 0 80 / .12); }
-
-@media (max-width: 1199px) { .guides i:nth-child(n + 7) { display: none; } }
-@media (max-width: 899px)  { .guides i:nth-child(n + 3) { display: none; } }

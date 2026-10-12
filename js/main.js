@@ -124,7 +124,13 @@
   document.documentElement.setAttribute("data-reveal-ready", "");   // tells the page's 4 s safety timer that all is well
 
 
-  // 5. Layout-grid overlay: press "G" (or open the page with ?grid) to compare against Figma
+  // 5. Experience: tell the CSS how many jobs there are, so that when one opens on hover
+  //    the others close in by exactly the same total (the page below never moves)
+  const experience = document.querySelector(".experience");
+  if (experience) experience.style.setProperty("--jobs", experience.querySelectorAll(".job").length);
+
+
+  // 6. Layout-grid overlay: press "G" (or open the page with ?grid) to compare against Figma
   let guides = null;
 
   const toggleGrid = () => {

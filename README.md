@@ -32,7 +32,7 @@ Speeds (writing, erasing, how long a phrase stays, the blinking pause) are in th
 
 - Tool names, experience blocks and the buttons react to the mouse (only on devices that can hover). They live in section 12b of `css/styles.css`.
   - **Tools:** the name slides 8px to the right.
-  - **Experience:** the block opens 36px above and below its text (no colour change), as in the Figma hover example. Change `padding-block: 48px` in `.job:hover` (12px normal + 36px extra) to make it more or less.
+  - **Experience:** the hovered block opens 36px above and below its text (no colour change) while the other blocks close in by the same total, so the footer never moves. Change `--job-open` (top of `.experience`) to make it more or less. This is set up for up to 8 jobs; the script counts them for you.
   - **Buttons** (download cv, show certification, let's get started): the icon moves 4px closer to the label. **Back to top:** the arrow lifts 6px.
 - Blocks rise in softly while you scroll. To include a new block, put `data-reveal-group` on its container: every direct child is revealed. Speed and distance are in section 12b (`@keyframes reveal`).
 - Visitors with "reduce motion" turned on get none of the animations.

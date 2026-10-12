@@ -337,6 +337,9 @@ strong { font-weight: 700; }
 /* 8. Experience
    ========================================================================== */
 .experience {
+  --job-pad: 12px;                /* resting space above and below a job's text */
+  --job-open: 36px;               /* extra space the hovered job gets on each side (see 12b) */
+  --jobs: 5;                      /* number of jobs; main.js keeps this in sync */
   grid-column: 5 / span 4;
   display: flex;
   flex-direction: column;
@@ -349,7 +352,7 @@ strong { font-weight: 700; }
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding-block: 12px;
+  padding-block: var(--job-pad);
   border-top: 1px solid var(--c-line);
 }
 
@@ -556,13 +559,54 @@ strong { font-weight: 700; }
 .list--tools li { cursor: default; }
 .list--tools span { transition: transform .25s var(--ease); }
 
-/* Experience: the block opens up a little above and below its text — 36px each way, as in the
-   Figma hover example. No colour change. The hovered block keeps its top edge, so the pointer
-   never leaves it. overflow-anchor stops the browser from scrolling the page to compensate. */
-.experience { overflow-anchor: none; }
+/* Experience: the hovered block opens up 36px above and below its text (no colour change) and the
+   other blocks close in by the same total, so the section keeps its height and nothing below it
+   (call to action, footer) ever moves.
+
+   How it stays exact: every job has an "openness" (--o1 … --o8, 0 = resting, 1 = fully open) that
+   eases on its own. A job's padding is   rest + open × (its openness − the others' openness shared out),
+   and those terms add up to zero across all jobs at every single frame — even while two blocks are
+   mid-way through opening and closing. (Room for up to 8 jobs; more would simply not animate.)
+   overflow-anchor stops the browser from scrolling the page to compensate. */
+@property --o1 { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --o2 { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --o3 { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --o4 { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --o5 { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --o6 { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --o7 { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --o8 { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+.experience {
+  overflow-anchor: none;
+  --sum: calc(                    /* how open everything is, all together */
+    var(--o1) + var(--o2) + var(--o3) + var(--o4) + var(--o5) + var(--o6) + var(--o7) + var(--o8)
+  );
+  --div: max(1, var(--sum));      /* only matters if a fast flick leaves several blocks mid-way */
+  transition:
+    --o1 .4s var(--ease),
+    --o2 .4s var(--ease),
+    --o3 .4s var(--ease),
+    --o4 .4s var(--ease),
+    --o5 .4s var(--ease),
+    --o6 .4s var(--ease),
+    --o7 .4s var(--ease),
+    --o8 .4s var(--ease);
+}
+.job:nth-of-type(1) { --o: var(--o1); }
+.job:nth-of-type(2) { --o: var(--o2); }
+.job:nth-of-type(3) { --o: var(--o3); }
+.job:nth-of-type(4) { --o: var(--o4); }
+.job:nth-of-type(5) { --o: var(--o5); }
+.job:nth-of-type(6) { --o: var(--o6); }
+.job:nth-of-type(7) { --o: var(--o7); }
+.job:nth-of-type(8) { --o: var(--o8); }
+
 .job {
   cursor: default;
-  transition: padding-top .4s var(--ease), padding-bottom .4s var(--ease);
+  padding-block: calc(
+    var(--job-pad) + var(--job-open) / var(--div) * (var(--o, 0) - (var(--sum) - var(--o, 0)) / (var(--jobs) - 1))
+  );
 }
 
 /* Buttons: the icon eases a few pixels closer to the label.
@@ -576,7 +620,14 @@ strong { font-weight: 700; }
 @media (hover: hover) and (pointer: fine) {
   .list--tools li:hover span { transform: translateX(8px); }
 
-  .job:hover { padding-block: 48px; }                 /* 12px + 36px */
+  .experience:has(.job:nth-of-type(1):hover) { --o1: 1; }
+  .experience:has(.job:nth-of-type(2):hover) { --o2: 1; }
+  .experience:has(.job:nth-of-type(3):hover) { --o3: 1; }
+  .experience:has(.job:nth-of-type(4):hover) { --o4: 1; }
+  .experience:has(.job:nth-of-type(5):hover) { --o5: 1; }
+  .experience:has(.job:nth-of-type(6):hover) { --o6: 1; }
+  .experience:has(.job:nth-of-type(7):hover) { --o7: 1; }
+  .experience:has(.job:nth-of-type(8):hover) { --o8: 1; }
 
   .btn:hover img { transform: translateX(-4px); }
   .social__top:hover img { transform: translateY(-6px); }
@@ -604,7 +655,7 @@ strong { font-weight: 700; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .caret { animation: none; }
-  .nav a, .social a, .btn img, .social__top img, .list--tools span, .job { transition: none; }
+  .nav a, .social a, .btn img, .social__top img, .list--tools span, .experience { transition: none; }
 }
 
 

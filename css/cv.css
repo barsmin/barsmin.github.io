@@ -4,9 +4,10 @@
    A black-and-white, ink-friendly version of the site's look: same fonts and
    same grid lines, on white paper with black text.
 
-   The page is one A4 sheet that sizes itself from its own width, so it keeps
-   its proportions on a phone screen and on any paper size or margin a browser
-   decides to print with:
+   The page is one A4 sheet. On screen it sizes itself from its own width, so it
+   keeps its proportions on a phone. When printing it is a fixed 210 x 296.6 mm
+   (container units can go stale between print layouts; the browser's own
+   shrink-to-fit handles printer margins):
      --u  = 1/794 of the sheet width (one "pixel" of an A4 page at 96 dpi)
      --k  = text and spacing scale of the columns, set by js/cv.js so that
             everything fits on the page (1 = the nominal sizes below)
@@ -171,7 +172,9 @@ strong { font-weight: 700; }
   padding: calc(14 * var(--u)) calc(16 * var(--u));
   border-inline: 1px solid var(--line);
 }
+.cv-name { font: 700 calc(34 * var(--u)) / 1.1 var(--font-display); }
 .cv-title { font: 700 calc(27 * var(--u)) / 1.1 var(--font-display); }
+.cv-name + .cv-title { margin-top: calc(-2 * var(--u)); }
 .cv-title span { display: block; }
 .cv-lead { max-width: 56ch; font-size: calc(10.5 * var(--u)); }
 
@@ -311,7 +314,7 @@ strong { font-weight: 700; }
 .label { margin-inline-end: .4em; }
 
 
-/* Print: just the page, scaled to whatever paper and margins the browser uses
+/* Print: just the page, at a fixed A4 size
    ========================================================================== */
 @media print {
   html.cv,
@@ -321,9 +324,11 @@ strong { font-weight: 700; }
     display: block;
     padding: 0;
   }
-  .sheet {                                      /* as wide as the paper allows (max A4): no viewport units, they are unreliable in print */
-    width: min(100%, 210mm);
+  .sheet {
+    container-type: normal;                     /* no container units while printing */
+    width: 210mm;
     margin-inline: auto;
     box-shadow: none;
   }
+  .sheet__page { --u: calc(210mm / 794); }      /* the same size the page was fitted at */
 }

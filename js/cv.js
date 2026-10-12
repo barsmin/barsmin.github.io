@@ -6,6 +6,7 @@
   // Only these two details belong to the CV alone — edit them here.
   const PHONE = { label: "phone", text: "+40 754 577 311", href: "tel:+40754577311" };
   const ADDRESS = { label: "address", text: "Bucharest, Romania" };
+  const NAME = "Cosmin Baraghin";
   // The CV photo: you alone (no lime shape), in black and white. Not the same file as on the site.
   const PHOTO = "assets/images/profile-cv.webp";
 
@@ -78,13 +79,15 @@
     const photo = site.querySelector(".hero__photo");
     const head = el("header", "cv-head");
     const intro = el("div", "cv-intro");
-    const title = el("h1", "cv-title");
-    title.append(el("span"), el("span"));
+    const name = el("h1", "cv-name");
+    name.textContent = NAME;
+    const title = el("h2", "cv-title");
+    title.append(el("span"), " ", el("span"));   // the space keeps the copied text readable
     title.children[0].textContent = site.querySelector(".hero__title > span").textContent.trim();
     title.children[1].textContent = JSON.parse(site.querySelector("[data-typed]").dataset.typed)[0];
     const lead = el("p", "cv-lead");
     lead.textContent = site.querySelector(".hero__lead").textContent.trim();
-    intro.append(title, lead);
+    intro.append(name, title, lead);
 
     const figure = el("figure", "cv-photo");
     const hello = el("figcaption", "cv-photo__hello");

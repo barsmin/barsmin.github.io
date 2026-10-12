@@ -23,6 +23,7 @@
   <meta property="og:description" content="Senior product designer and UX/UI designer. Principle that I follow: less is more.">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
   <!-- Fonts: Space Grotesk (headings, buttons) + Inter Tight (text) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +40,11 @@
   <header class="site-header">
     <div class="container">
       <a class="logo" href="index.html">
-        <img src="assets/icons/logo.svg" alt="barsmin — home" width="88" height="20">
+        <!-- Phones get the small "ba" mark; tablets and desktops get the full logo -->
+        <picture>
+          <source media="(max-width: 899px)" srcset="assets/icons/logo-mobile.svg">
+          <img src="assets/icons/logo.svg" alt="barsmin — home" width="88" height="20">
+        </picture>
       </a>
       <nav class="nav" aria-label="Primary">
         <a href="index.html" aria-current="page">personal information</a>

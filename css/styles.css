@@ -18,7 +18,6 @@
   --c-line: #202425;          /* Hairlines, active nav tab           */
   --c-accent: #161b1c;        /* Main accent: hover surfaces         */
   --c-lime: #b5ff6d;          /* Selective accent                    */
-  --c-lime-hover: #c9ff93;
   --c-white: #ffffff;
 
   /* Employer colours used on the experience titles */
@@ -144,10 +143,8 @@ strong { font-weight: 700; }
   background: var(--c-lime);
   color: var(--c-dark);
   font: 700 var(--fs-btn) / var(--lh) var(--font-display);
-  transition: background-color .15s ease;
 }
 .btn img { flex: none; }
-.btn:hover { background: var(--c-lime-hover); }
 
 
 /* 5. Header
@@ -161,7 +158,8 @@ strong { font-weight: 700; }
   justify-content: space-between;
 }
 
-.logo img { width: 88px; height: 20px; }
+.logo picture { display: block; }
+.logo img { display: block; width: 88px; height: 20px; }
 
 .nav { display: flex; gap: 24px; }
 
@@ -410,7 +408,7 @@ strong { font-weight: 700; }
   border-inline: 1px solid var(--c-line);
   transition: background-color .15s ease;
 }
-.social a:hover { background: var(--c-accent); }
+.social a:not(.social__top):hover { background: var(--c-accent); }   /* back to top keeps its lime */
 .social img { flex: none; }
 
 .social .social__top {
@@ -419,7 +417,6 @@ strong { font-weight: 700; }
   font: 700 var(--fs-btn) / var(--lh) var(--font-display);
   text-align: center;
 }
-.social .social__top:hover { background: var(--c-lime-hover); }
 .social__top span { white-space: nowrap; }
 
 
@@ -482,7 +479,7 @@ strong { font-weight: 700; }
 
   /* Header */
   .site-header { height: 48px; border-bottom: 1px solid var(--c-line); }
-  .logo img { width: 44px; height: 10px; }
+  .logo img { width: 26px; height: 19.32px; }       /* the small "ba" mark (logo-mobile.svg), as in the phone design */
   .nav { gap: 12px; }
   .nav a { padding: 4px 6px; }
 
@@ -510,6 +507,12 @@ strong { font-weight: 700; }
     column-gap: 12px;
   }
   .social__top span { white-space: normal; }
+
+  /* Experience: no box on the phone — the text sits on the page margin, like the hero and call-to-action */
+  .experience {
+    padding-inline: 0;
+    border-inline: 0;
+  }
 
   /* Full-bleed horizontal rules between the stacked sections */
   .hero__text,
@@ -548,26 +551,24 @@ strong { font-weight: 700; }
 /* 12b. Motion — hover effects and scroll reveal
    ========================================================================== */
 
-/* Tools: the name slides a little to the right */
+/* Tools: the name slides a little to the right.
+   The pointer stays a normal arrow (no text cursor) over the list and the experience blocks. */
+.list--tools li { cursor: default; }
 .list--tools span { transition: transform .25s var(--ease); }
 
-/* Experience: the block opens up above and below. Padding grows and an equal negative margin
-   cancels it, so the text and everything around it stay exactly where they are. */
+/* Experience: the block opens up a little above and below its text — 36px each way, as in the
+   Figma hover example. No colour change. The hovered block keeps its top edge, so the pointer
+   never leaves it. overflow-anchor stops the browser from scrolling the page to compensate. */
+.experience { overflow-anchor: none; }
 .job {
-  --brand: var(--c-line);
-  transition:
-    padding .4s var(--ease),
-    margin .4s var(--ease),
-    background-color .4s var(--ease),
-    border-top-color .4s var(--ease);
+  cursor: default;
+  transition: padding-top .4s var(--ease), padding-bottom .4s var(--ease);
 }
-.job--esx          { --brand: var(--brand-esx); }
-.job--zupria       { --brand: var(--brand-zupria); }
-.job--oracle       { --brand: var(--brand-oracle); }
-.job--blueberryad  { --brand: var(--brand-blueberryad); }
-.job--smash        { --brand: var(--brand-smash); }
 
-/* Back to top: the arrow lifts */
+/* Buttons: the icon eases a few pixels closer to the label.
+   Back to top: the arrow lifts. (No colour change on any of them.) */
+.btn img { transition: transform .25s var(--ease); }
+.btn:focus-visible img { transform: translateX(-4px); }
 .social__top img { transition: transform .3s var(--ease); }
 .social__top:focus-visible img { transform: translateY(-6px); }
 
@@ -575,14 +576,9 @@ strong { font-weight: 700; }
 @media (hover: hover) and (pointer: fine) {
   .list--tools li:hover span { transform: translateX(8px); }
 
-  .job:hover {
-    padding: 22px 12px;
-    margin: -10px -12px;
-    background-color: var(--c-accent);
-    border-top-color: var(--brand);                                           /* fallback */
-    border-top-color: color-mix(in srgb, var(--brand) 60%, var(--c-line));
-  }
+  .job:hover { padding-block: 48px; }                 /* 12px + 36px */
 
+  .btn:hover img { transform: translateX(-4px); }
   .social__top:hover img { transform: translateY(-6px); }
 }
 
@@ -608,7 +604,7 @@ strong { font-weight: 700; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .caret { animation: none; }
-  .btn, .nav a, .social a, .social__top img, .list--tools span, .job { transition: none; }
+  .nav a, .social a, .btn img, .social__top img, .list--tools span, .job { transition: none; }
 }
 
 

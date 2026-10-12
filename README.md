@@ -30,7 +30,10 @@ Speeds (writing, erasing, how long a phrase stays, the blinking pause) are in th
 
 ## Hover and scroll effects
 
-- Tools names, experience blocks and the "back to top" arrow react to the mouse (only on devices that can hover). They live in section 12b of `css/styles.css`.
+- Tool names, experience blocks and the buttons react to the mouse (only on devices that can hover). They live in section 12b of `css/styles.css`.
+  - **Tools:** the name slides 8px to the right.
+  - **Experience:** the block opens 36px above and below its text (no colour change), as in the Figma hover example. Change `padding-block: 48px` in `.job:hover` (12px normal + 36px extra) to make it more or less.
+  - **Buttons** (download cv, show certification, let's get started): the icon moves 4px closer to the label. **Back to top:** the arrow lifts 6px.
 - Blocks rise in softly while you scroll. To include a new block, put `data-reveal-group` on its container: every direct child is revealed. Speed and distance are in section 12b (`@keyframes reveal`).
 - Visitors with "reduce motion" turned on get none of the animations.
 
@@ -60,7 +63,8 @@ index.html        home page
 projects.html     placeholder page
 css/styles.css    tokens → base → components → breakpoints
 js/main.js        footer year, optional-image fallback, grid overlay
-assets/icons/     SVGs exported from Figma
+assets/icons/     SVGs exported from Figma (logo.svg = full logo, logo-mobile.svg = small "ba" mark used on phones)
+favicon.svg       browser-tab icon (the "ba" mark); apple-touch-icon.png is the iPhone home-screen version
 assets/images/    profile.png (you add)
 assets/cv/        cosmin-cv.pdf (you add)
 ```

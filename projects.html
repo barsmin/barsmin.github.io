@@ -17,6 +17,7 @@
   <meta name="theme-color" content="#111315">
   <meta name="color-scheme" content="dark">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;700&family=Space+Grotesk:wght@400;700&display=swap">
@@ -29,7 +30,11 @@
   <header class="site-header">
     <div class="container">
       <a class="logo" href="index.html">
-        <img src="assets/icons/logo.svg" alt="barsmin — home" width="88" height="20">
+        <!-- Phones get the small "ba" mark; tablets and desktops get the full logo -->
+        <picture>
+          <source media="(max-width: 899px)" srcset="assets/icons/logo-mobile.svg">
+          <img src="assets/icons/logo.svg" alt="barsmin — home" width="88" height="20">
+        </picture>
       </a>
       <nav class="nav" aria-label="Primary">
         <a href="index.html">personal information</a>

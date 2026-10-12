@@ -7,8 +7,7 @@ No build step, so it works as-is on GitHub Pages: https://barsmin.github.io/
 
 | What | Where | Notes |
 |---|---|---|
-| CV | `assets/cv/cosmin-cv.pdf` | The "download cv" button points here (or change its `href` in `index.html`). |
-| Social profiles | `index.html` (search for `TODO`) | Instagram, Dribbble and LinkedIn currently open the sites' home pages. |
+| Instagram link | `index.html` (search for `TODO`) | Still opens instagram.com's home page. Once it's your profile URL it also appears in the CV's contact strip. |
 | Projects page | `projects.html` | Placeholder only — the Figma file doesn't include this page yet. |
 
 ## Profile photo
@@ -32,6 +31,19 @@ All of these live in section 12b of `css/styles.css`.
 - **Buttons** (download cv, show certification, let's get started): the icon moves 4px closer to the label. **Back to top:** the arrow lifts 6px. No colour change.
 - **Scroll:** blocks rise in softly as they enter the screen. To include a new block, put `data-reveal-group` on its container: every direct child is revealed. Speed and distance are in `@keyframes reveal`.
 - Hover effects only run on devices with a mouse. Visitors with "reduce motion" turned on get none of the animations.
+
+## CV
+
+The "download cv" button opens `cv.html` in a new tab, which shows the print / save-as-PDF dialog straight away (there is also a "save as PDF / print" button on the page, for printing again). In the dialog, choose **Save as PDF** or a printer. If the dark background doesn't show, tick **Background graphics** in the print options.
+
+The CV is built live from the content of `index.html` (title, intro, photo, skills, tools, education, credentials and every job), in the same style as the site but without the logo, menu and footer. Edit the text on the home page and the CV follows. Nothing else to maintain.
+
+- **Phone and address** exist only in the CV: edit `PHONE` and `ADDRESS` at the top of `js/cv.js`.
+- **Contact strip:** phone, address, email, website, and every profile in the site's social row that has a real URL (a link that still points at a site's home page is left out).
+- **Pages:** A4. Page 1 holds the intro, contact, skills, tools, education, credentials and the first jobs; jobs that don't fit move to page 2 (and a page 3 if needed) automatically. Keep the left column (skills + tools + education + credentials) short enough to fit page 1 — the browser console shows a warning if it isn't.
+- **Look:** sizes and spacing are in `css/cv.css` (the `.sheet` block holds the type scale).
+- The page is marked `noindex` so search engines don't list your phone number, but anyone with the link can still open it.
+- The file name suggested when saving comes from the page title in `cv.html`.
 
 ## Contact button
 
@@ -59,12 +71,14 @@ All paths are relative, so the site works both at the root and in a sub-folder U
 
 ```
 index.html            home page
+cv.html               the CV (printable, built from index.html)
 projects.html         placeholder page
 css/styles.css        tokens → base → components → breakpoints → motion
+css/cv.css            CV pages: A4 layout and print rules
 js/main.js            footer year, contact button, typewriter, scroll reveal
+js/cv.js              builds the CV from index.html; phone and address live here
 assets/icons/         SVGs exported from Figma (logo.svg = full logo, logo-mobile.svg = small "ba" mark used on phones)
 assets/images/        profile.png
-assets/cv/            cosmin-cv.pdf (you add)
 favicon.svg           browser-tab icon (the "ba" mark)
 apple-touch-icon.png  iPhone home-screen icon
 ```

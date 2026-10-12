@@ -1,0 +1,245 @@
+/* ==========================================================================
+   barsmin — CV (cv.html)
+   The look comes from styles.css (colours, fonts, the card / list / job styles).
+   Here: A4 pages, a smaller type scale, and the print rules.
+   Only the classes with a "cv-" prefix are new; the site's responsive rules are
+   deliberately not reused, because a printed A4 page is narrower than 900px.
+   ========================================================================== */
+
+@page { size: A4; margin: 0; }
+
+/* Print the dark background and colours exactly as on screen */
+* {
+  -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+}
+
+html.cv { background: #0b0d0e; }               /* the surround on screen; the pages themselves are the site's dark */
+
+
+/* Screen: toolbar + pages
+   ========================================================================== */
+.cv-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px max(16px, calc((100% - 210mm) / 2));
+  background: var(--c-dark);
+  border-bottom: 1px solid var(--c-line);
+}
+.cv-bar__back { font: 700 var(--fs-btn) / var(--lh) var(--font-display); }
+.cv-bar__back:hover { text-decoration: underline; text-underline-offset: 4px; }
+.cv-bar .btn { cursor: pointer; border: 0; }
+
+.cv-sheets {
+  --fit: 1;                                    /* set by cv.js so the pages fit narrow screens */
+  zoom: var(--fit);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 12px 56px;
+}
+
+.cv-message {
+  max-width: 40ch;
+  margin-block: 80px;
+  text-align: center;
+}
+.cv-message a { text-decoration: underline; text-underline-offset: 3px; }
+
+
+/* A4 page — everything inside is sized in px at the CV scale
+   ========================================================================== */
+.sheet {
+  --fs-title: 30px;
+  --fs-heading: 22px;
+  --fs-company: 22px;
+  --fs-role: 14px;
+  --fs-body: 11.5px;
+  --fs-btn: 10.5px;
+  --lh: 1.4;
+  --pad: 14px;
+
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  width: 210mm;
+  height: 296.6mm;                             /* a hair under 297mm so a page never spills into a blank one */
+  overflow: hidden;
+  background: var(--c-dark);
+  color: var(--c-white);
+  font: 300 var(--fs-body) / var(--lh) var(--font-text);
+  box-shadow: 0 0 0 1px var(--c-line);
+  break-after: page;
+  break-inside: avoid;
+}
+.sheet:last-of-type { break-after: auto; }
+.sheet a { color: inherit; }
+
+
+/* Intro: title, lead and the photo card with its speech bubble */
+.cv-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44mm;
+  column-gap: 8mm;
+  padding-inline: 14mm;
+  border-bottom: 1px solid var(--c-line);
+}
+
+.cv-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: 18px var(--pad);
+  border-inline: 1px solid var(--c-line);
+}
+.cv-title { font: 700 var(--fs-title) / 1.12 var(--font-display); }
+.cv-title span { display: block; }
+.cv-lead { max-width: 52ch; }
+
+.cv-photo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin: 0;
+  border-inline: 1px solid var(--c-line);
+}
+.cv-photo__hello {
+  flex: 1;
+  min-height: 34px;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+}
+.cv-photo__tail {                              /* same notched line as the speech bubble on the site */
+  position: relative;
+  flex: none;
+  height: 30px;
+  background: linear-gradient(var(--c-line), var(--c-line)) right top / 34px 1px no-repeat;
+}
+.cv-photo__tail::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 65px;
+  height: 1px;
+  background: var(--c-line);
+}
+.cv-photo__tail::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 34px;
+  width: 31px;
+  height: 31px;
+  background: url("../assets/icons/bubble-tail.svg") no-repeat;
+}
+.cv-photo img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 300 / 306;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+
+/* Contact strip */
+.cv-contact {
+  padding-inline: 14mm;
+  border-bottom: 1px solid var(--c-line);
+}
+.cv-contact ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-inline: 1px solid var(--c-line);
+}
+.cv-contact li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  padding: 7px var(--pad);
+}
+.cv-contact li:nth-child(3n + 2),
+.cv-contact li:nth-child(3n + 3) { border-left: 1px solid var(--c-line); }
+.cv-contact li:nth-child(n + 4) { border-top: 1px solid var(--c-line); }
+.cv-contact__label { flex: none; color: var(--c-lime); font-weight: 700; }
+.cv-contact a,
+.cv-contact li > span:last-child { overflow-wrap: anywhere; }
+
+
+/* Columns: the left one (page 1 only) and the experience */
+.cv-cols {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 58mm minmax(0, 1fr);
+  column-gap: 6mm;
+  padding-inline: 14mm;
+  overflow: hidden;
+}
+
+.cv-cols--wide { grid-template-columns: minmax(0, 1fr); }   /* pages 2+: no left column, the experience takes the full width */
+
+.cv-side {
+  display: flex;
+  flex-direction: column;
+}
+.cv-side .card { gap: 10px; }
+
+.cv-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: var(--pad) var(--pad) 0;
+  border-inline: 1px solid var(--c-line);
+}
+
+/* Tighter spacing than the website, and smaller icons */
+.sheet .list { gap: 6px; }
+.sheet .list--items { gap: 10px; }
+.sheet .item { gap: 8px; }
+.sheet .item__body { gap: 4px; }
+.sheet .list img { width: 14px; height: 14px; }
+.sheet .btn { gap: 8px; padding: 5px 9px; }
+.sheet .btn img { width: 14px; height: 14px; }
+
+.sheet .job {
+  gap: 8px;
+  padding-block: 12px;                         /* the site's hover maths isn't used here */
+}
+.sheet .job__head { gap: 2px; }
+.sheet .job__body { gap: 8px; }
+.sheet .job__text { gap: .8em; }
+
+/* No hover motion in the CV */
+.sheet .list--tools span { transform: none; transition: none; }
+.sheet .btn img { transition: none; transform: none; }
+
+
+/* Narrow screens: the pages are shrunk to fit (see --fit), so only the bar needs a tweak */
+@media screen and (max-width: 520px) {
+  .cv-bar { padding-inline: 12px; }
+  .cv-bar .btn { padding-inline: 10px; }
+}
+
+
+/* Print: just the pages, edge to edge, one per sheet of paper
+   ========================================================================== */
+@media print {
+  html.cv { background: var(--c-dark); }
+  .cv-bar { display: none; }
+  .cv-sheets {
+    zoom: 1;
+    display: block;
+    padding: 0;
+  }
+  .sheet { box-shadow: none; }
+}

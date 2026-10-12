@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" class="cv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- The title becomes the default file name when the CV is saved as a PDF -->
+  <title>Cosmin — CV</title>
+  <meta name="description" content="Curriculum vitae of Cosmin (barsmin), senior product designer and UX/UI designer.">
+  <meta name="robots" content="noindex">   <!-- keeps the phone number out of search results -->
+  <meta name="theme-color" content="#111315">
+  <meta name="color-scheme" content="dark">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;700&family=Space+Grotesk:wght@400;700&display=swap">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/cv.css">
+</head>
+
+<body>
+  <!-- Screen only: hidden when printing -->
+  <div class="cv-bar">
+    <a class="cv-bar__back" href="index.html">← back to site</a>
+    <button class="btn" type="button" data-print>
+      save as PDF / print
+      <img src="assets/icons/download.svg" alt="" width="20" height="20">
+    </button>
+  </div>
+
+  <!-- js/cv.js builds the CV pages here from the content of index.html -->
+  <main id="sheets" class="cv-sheets">
+    <p class="cv-message">Preparing your CV…</p>
+    <noscript><p class="cv-message">The CV is built from the site with JavaScript. Please turn it on, or go <a href="index.html">back to the site</a>.</p></noscript>
+  </main>
+
+  <script src="js/cv.js" defer></script>
+</body>
+</html>

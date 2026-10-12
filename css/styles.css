@@ -145,9 +145,21 @@ strong { font-weight: 700; }
 .btn img { flex: none; }
 
 
-/* 5. Header
+/* 5. Header — sticky on every screen size, so the nav is always one click away
    ========================================================================== */
-.site-header { height: 62px; }
+:root { --header-h: 62px; }
+html { scroll-padding-top: var(--header-h); }   /* anchor jumps land below the header, not under it */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-h);
+  background: var(--c-dark);                   /* solid, so content scrolls cleanly underneath */
+  box-shadow: 0 1px 0 transparent;
+  transition: box-shadow .2s ease;
+}
+.site-header.is-stuck { box-shadow: 0 1px 0 var(--c-line); }   /* hairline once the page has scrolled */
 
 .site-header .container {
   height: 100%;
@@ -452,6 +464,7 @@ strong { font-weight: 700; }
     --fs-role: 20px;
     --fs-body: 16px;
     --fs-btn: 14px;
+    --header-h: 48px;
   }
 
   /* Keep the stacked column readable on large phones / portrait tablets */
@@ -468,7 +481,7 @@ strong { font-weight: 700; }
   .spacer { display: none; }
 
   /* Header */
-  .site-header { height: 48px; border-bottom: 1px solid var(--c-line); }
+  .site-header { border-bottom: 1px solid var(--c-line); }
   .logo img { width: 26px; height: 19.32px; }       /* the small "ba" mark (logo-mobile.svg), as in the phone design */
   .nav { gap: 12px; }
   .nav a { padding: 4px 6px; }
@@ -641,5 +654,5 @@ strong { font-weight: 700; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .caret { animation: none; }
-  .nav a, .social a, .btn img, .social__top img, .list--tools span, .list--skills span, .experience { transition: none; }
+  .site-header, .nav a, .social a, .btn img, .social__top img, .list--tools span, .list--skills span, .experience { transition: none; }
 }

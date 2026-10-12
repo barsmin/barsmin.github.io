@@ -103,7 +103,16 @@
   document.documentElement.setAttribute("data-reveal-ready", "");   // tells the page's 4 s safety timer that all is well
 
 
-  // 5. Experience: tell the CSS how many jobs there are, so that when one opens on hover
+  // 5. Sticky header: show its bottom hairline once the page has scrolled
+  const header = document.querySelector(".site-header");
+  if (header) {
+    const onScroll = () => header.classList.toggle("is-stuck", window.scrollY > 0);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
+
+  // 6. Experience: tell the CSS how many jobs there are, so that when one opens on hover
   //    the others close in by exactly the same total (the page below never moves)
   const experience = document.querySelector(".experience");
   if (experience) experience.style.setProperty("--jobs", experience.querySelectorAll(".job").length);

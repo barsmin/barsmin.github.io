@@ -77,7 +77,7 @@
     const head = el("header", "cv-head");
     const intro = el("div", "cv-intro");
     const title = el("h1", "cv-title");
-    title.append(el("span"), el("span", "accent"));
+    title.append(el("span"), el("span"));
     title.children[0].textContent = site.querySelector(".hero__title > span").textContent.trim();
     title.children[1].textContent = JSON.parse(site.querySelector("[data-typed]").dataset.typed)[0];
     intro.append(title, el("p", "cv-lead", site.querySelector(".hero__lead").innerHTML));

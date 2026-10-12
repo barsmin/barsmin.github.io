@@ -38,13 +38,13 @@ All of these live in section 12b of `css/styles.css`.
 
 The "download cv" button opens `cv.html` in a new tab, which shows the print / save-as-PDF dialog straight away (the "save as PDF / print" button on that page opens it again, and "back to site" returns to the home page). In the dialog choose **Save as PDF** or a printer.
 
-The CV is a **white, ink-friendly, single A4 page** in the site's style (same fonts, grid lines, lime accent and employer colours as the site). It has no logo, menu, buttons or footer. It is built live from the content of `index.html` (title, intro, photo, skills, tools, education, credentials and every job), so editing the text on the home page updates the CV. Nothing else to maintain.
+The CV is a **black-and-white, ink-friendly, single A4 page** in the site's style (same fonts and grid lines; white paper, black text, the photo and icons in black and white). It has no logo, menu, buttons or footer. It is built live from the content of `index.html` (title, intro, photo, skills, tools, education, credentials and every job), so editing the text on the home page updates the CV. Nothing else to maintain.
 
 - **One page:** `js/cv.js` shrinks the text and spacing of the two columns (down to 70% of the nominal size, set at the top of the file) until everything fits. Add a lot more content and the text gets smaller; only past that limit does the last job move to a second page (the browser console says so).
 - **Any paper:** the page scales itself to the paper and margins the browser prints with (A4, Letter, phone print dialogs that add their own margins), so it stays one page. If the colours or the speech-bubble lines are missing, tick **Background graphics** in the print options.
 - **Phone and address** exist only in the CV: edit `PHONE` and `ADDRESS` at the top of `js/cv.js`.
 - **Contact strip:** phone, address, email, website, and every profile in the site's social row that has a real URL (a link that still points at a site's home page is left out).
-- **Look:** sizes, spacing and colours are in `css/cv.css` (the `.sheet__page` block holds the colours; lengths are in "CV pixels", 794 per page width, so they scale with the paper).
+- **Look:** sizes, spacing and the ink colour are in `css/cv.css` (the `.sheet__page` block; lengths are in "CV pixels", 794 per page width, so they scale with the paper).
 - The page is marked `noindex` so search engines don't list your phone number, but anyone with the link can still open it.
 - The file name suggested when saving comes from the page title in `cv.html`.
 

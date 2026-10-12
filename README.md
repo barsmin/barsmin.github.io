@@ -12,9 +12,9 @@ No build step, so it works as-is on GitHub Pages: https://barsmin.github.io/
 
 ## Profile photo
 
-The photo exists in three formats in `assets/images/`: `profile.avif` (~30 KB), `profile.webp` (~40 KB) and `profile.png` (~75 KB, the fallback for very old browsers). The page uses a `<picture>` tag, so every browser downloads only the smallest one it understands (the old PNG was 160 KB). The CV uses the same files.
+The photo exists in three formats in `assets/images/`: `profile.avif` (~20 KB), `profile.webp` (~30 KB) and `profile.png` (~45 KB, a smaller fallback for very old browsers). The page uses a `<picture>` tag, so every browser downloads only the smallest one it understands (the old PNG was 160 KB). The CV uses the same files.
 
-All three are the same image, 720 px wide with a transparent background. To change the photo, send the new PNG (transparent background, at least ~1200 px wide) and re-export all three, otherwise browsers will keep showing the old one from the first format they support. The photo area on the page is 300×306 px (about 478 px wide on tablets), so 720 px is already sharp on phones and retina screens.
+All three are the same image with a transparent background (720 px wide; the PNG fallback 480 px). To change the photo, send the new PNG (transparent background, at least ~1200 px wide) and re-export all three, otherwise browsers will keep showing the old one from the first format they support. The photo area on the page is 300×306 px (about 478 px wide on tablets), so 720 px is already sharp on phones and retina screens.
 
 Photo not showing? Open `https://barsmin.github.io/assets/images/profile.png` directly. If that is a 404, check that the files are inside `assets/images/`, named exactly like above (on Windows turn on *View → File name extensions*) and pushed. GitHub Pages needs about a minute, then hard-refresh (Ctrl/Cmd + Shift + R).
 

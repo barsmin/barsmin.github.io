@@ -34,14 +34,15 @@ All of these live in section 12b of `css/styles.css`.
 
 ## CV
 
-The "download cv" button opens `cv.html` in a new tab, which shows the print / save-as-PDF dialog straight away (there is also a "save as PDF / print" button on the page, for printing again). In the dialog, choose **Save as PDF** or a printer. If the dark background doesn't show, tick **Background graphics** in the print options.
+The "download cv" button opens `cv.html` in a new tab, which shows the print / save-as-PDF dialog straight away (the "save as PDF / print" button on that page opens it again, and "back to site" returns to the home page). In the dialog choose **Save as PDF** or a printer.
 
-The CV is built live from the content of `index.html` (title, intro, photo, skills, tools, education, credentials and every job), in the same style as the site but without the logo, menu and footer. Edit the text on the home page and the CV follows. Nothing else to maintain.
+The CV is a **white, ink-friendly, single A4 page** in the site's style (same fonts, grid lines and accent, with the lime and the employer colours darkened so they read on paper). It has no logo, menu, buttons or footer. It is built live from the content of `index.html` (title, intro, photo, skills, tools, education, credentials and every job), so editing the text on the home page updates the CV. Nothing else to maintain.
 
+- **One page:** `js/cv.js` shrinks the text and spacing of the two columns (down to 70% of the nominal size, set at the top of the file) until everything fits. Add a lot more content and the text gets smaller; only past that limit does the last job move to a second page (the browser console says so).
+- **Any paper:** the page scales itself to the paper and margins the browser prints with (A4, Letter, phone print dialogs that add their own margins), so it stays one page. If the colours or the speech-bubble lines are missing, tick **Background graphics** in the print options.
 - **Phone and address** exist only in the CV: edit `PHONE` and `ADDRESS` at the top of `js/cv.js`.
 - **Contact strip:** phone, address, email, website, and every profile in the site's social row that has a real URL (a link that still points at a site's home page is left out).
-- **Pages:** A4. Page 1 holds the intro, contact, skills, tools, education, credentials and the first jobs; jobs that don't fit move to page 2 (and a page 3 if needed) automatically. Keep the left column (skills + tools + education + credentials) short enough to fit page 1 — the browser console shows a warning if it isn't.
-- **Look:** sizes and spacing are in `css/cv.css` (the `.sheet` block holds the type scale).
+- **Look:** sizes, spacing and colours are in `css/cv.css` (the `.sheet__page` block holds the colours; lengths are in "CV pixels", 794 per page width, so they scale with the paper).
 - The page is marked `noindex` so search engines don't list your phone number, but anyone with the link can still open it.
 - The file name suggested when saving comes from the page title in `cv.html`.
 
@@ -74,7 +75,7 @@ index.html            home page
 cv.html               the CV (printable, built from index.html)
 projects.html         placeholder page
 css/styles.css        tokens → base → components → breakpoints → motion
-css/cv.css            CV pages: A4 layout and print rules
+css/cv.css            the CV: white A4 sheet, scaling and print rules (self-contained)
 js/main.js            footer year, contact button, typewriter, scroll reveal
 js/cv.js              builds the CV from index.html; phone and address live here
 assets/icons/         SVGs exported from Figma (logo.svg = full logo, logo-mobile.svg = small "ba" mark used on phones)

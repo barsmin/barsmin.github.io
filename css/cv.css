@@ -1,23 +1,85 @@
 /* ==========================================================================
    barsmin — CV (cv.html)
-   The look comes from styles.css (colours, fonts, the card / list / job styles).
-   Here: A4 pages, a smaller type scale, and the print rules.
-   Only the classes with a "cv-" prefix are new; the site's responsive rules are
-   deliberately not reused, because a printed A4 page is narrower than 900px.
+   --------------------------------------------------------------------------
+   A white, ink-friendly version of the site's look: same fonts, same grid
+   lines, same lime accent (darkened so it reads on paper).
+
+   The page is one A4 sheet that sizes itself from its own width, so it keeps
+   its proportions on a phone screen and on any paper size or margin a browser
+   decides to print with:
+     --u  = 1/794 of the sheet width (one "pixel" of an A4 page at 96 dpi)
+     --k  = text and spacing scale of the columns, set by js/cv.js so that
+            everything fits on the page (1 = the nominal sizes below)
    ========================================================================== */
+
+:root {
+  --c-dark: #111315;
+  --c-line: #202425;
+  --c-lime: #b5ff6d;
+  --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-text: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --ease: cubic-bezier(.2, .65, .2, 1);
+}
 
 @page { size: A4; margin: 0; }
 
-/* Print the dark background and colours exactly as on screen */
-* {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
 }
 
-html.cv { background: #0b0d0e; }               /* the surround on screen; the pages themselves are the site's dark */
+html.cv {
+  background: #0b0d0e;
+  -webkit-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: #0b0d0e;
+  color: #fff;
+  font-family: var(--font-text);
+  cursor: default;                              /* a plain arrow everywhere… */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, h3, p, ul, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; cursor: pointer; }   /* …and the hand on links and buttons */
+img { display: block; max-width: 100%; }
+strong { font-weight: 700; }
 
 
-/* Screen: toolbar + pages
+/* Buttons — the same as on the site: lime, label + icon, the icon eases 4px closer to the label
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 0;
+  background: var(--c-lime);
+  color: var(--c-dark);
+  font: 700 16px / normal var(--font-display);
+  cursor: pointer;
+}
+.btn img { flex: none; transition: transform .25s var(--ease); }
+.btn:focus-visible img { transform: translateX(-4px); }
+.btn--back:focus-visible img { transform: translateX(4px); }
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover img { transform: translateX(-4px); }
+  .btn--back:hover img { transform: translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn img { transition: none; }
+}
+
+
+/* Screen: toolbar + the page
    ========================================================================== */
 .cv-bar {
   position: sticky;
@@ -31,13 +93,8 @@ html.cv { background: #0b0d0e; }               /* the surround on screen; the pa
   background: var(--c-dark);
   border-bottom: 1px solid var(--c-line);
 }
-.cv-bar__back { font: 700 var(--fs-btn) / var(--lh) var(--font-display); }
-.cv-bar__back:hover { text-decoration: underline; text-underline-offset: 4px; }
-.cv-bar .btn { cursor: pointer; border: 0; }
 
 .cv-sheets {
-  --fit: 1;                                    /* set by cv.js so the pages fit narrow screens */
-  zoom: var(--fit);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -52,194 +109,230 @@ html.cv { background: #0b0d0e; }               /* the surround on screen; the pa
 }
 .cv-message a { text-decoration: underline; text-underline-offset: 3px; }
 
+@media screen and (max-width: 520px) {
+  .cv-bar { padding-inline: 12px; }
+  .cv-bar .btn { gap: 8px; padding: 8px 10px; font-size: 14px; }
+}
 
-/* A4 page — everything inside is sized in px at the CV scale
+
+/* The sheet: A4, sized from its own width
    ========================================================================== */
 .sheet {
-  --fs-title: 30px;
-  --fs-heading: 22px;
-  --fs-company: 22px;
-  --fs-role: 14px;
-  --fs-body: 11.5px;
-  --fs-btn: 10.5px;
-  --lh: 1.4;
-  --pad: 14px;
-
+  position: relative;
   flex: none;
-  display: flex;
-  flex-direction: column;
-  width: 210mm;
-  height: 296.6mm;                             /* a hair under 297mm so a page never spills into a blank one */
+  container-type: inline-size;                  /* lets everything inside be sized in cqw */
+  width: min(210mm, 100%);
+  aspect-ratio: 210 / 296.6;                    /* a hair under 297mm so a page never spills into a blank one */
   overflow: hidden;
-  background: var(--c-dark);
-  color: var(--c-white);
-  font: 300 var(--fs-body) / var(--lh) var(--font-text);
+  background: #fff;
   box-shadow: 0 0 0 1px var(--c-line);
   break-after: page;
   break-inside: avoid;
 }
 .sheet:last-of-type { break-after: auto; }
+
+.sheet__page {
+  --u: calc(100cqw / 794);
+  --k: 1;
+  --v: calc(var(--u) * var(--k));
+  --edge: calc(44 * var(--u));                  /* the outer vertical lines */
+
+  --ink: #111315;
+  --muted: #4b5257;
+  --line: rgba(17, 19, 21, .2);
+  --accent: #3d7a00;                            /* the site's lime, darkened for paper */
+
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  font: 400 calc(10.5 * var(--v)) / 1.38 var(--font-text);
+  -webkit-text-size-adjust: none;
+          text-size-adjust: none;
+}
 .sheet a { color: inherit; }
+.accent { color: var(--accent); }
 
 
-/* Intro: title, lead and the photo card with its speech bubble */
+/* Intro: title, lead and the photo with its speech bubble */
 .cv-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 44mm;
-  column-gap: 8mm;
-  padding-inline: 14mm;
-  border-bottom: 1px solid var(--c-line);
+  grid-template-columns: minmax(0, 1fr) calc(124 * var(--u));
+  column-gap: calc(22 * var(--u));
+  padding-inline: var(--edge);
+  border-bottom: 1px solid var(--line);
 }
 
 .cv-intro {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 14px;
-  padding: 18px var(--pad);
-  border-inline: 1px solid var(--c-line);
+  gap: calc(10 * var(--u));
+  padding: calc(14 * var(--u)) calc(16 * var(--u));
+  border-inline: 1px solid var(--line);
 }
-.cv-title { font: 700 var(--fs-title) / 1.12 var(--font-display); }
+.cv-title { font: 700 calc(27 * var(--u)) / 1.1 var(--font-display); }
 .cv-title span { display: block; }
-.cv-lead { max-width: 52ch; }
+.cv-lead { max-width: 56ch; font-size: calc(10.5 * var(--u)); }
 
 .cv-photo {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  margin: 0;
-  border-inline: 1px solid var(--c-line);
+  border-inline: 1px solid var(--line);
 }
 .cv-photo__hello {
   flex: 1;
-  min-height: 34px;
+  min-height: calc(22 * var(--u));
   display: grid;
   place-items: center;
-  font-size: 13px;
+  font-size: calc(11 * var(--u));
 }
-.cv-photo__tail {                              /* same notched line as the speech bubble on the site */
+.cv-photo__tail {                               /* the line under the bubble, with its notch — as on the site */
   position: relative;
   flex: none;
-  height: 30px;
-  background: linear-gradient(var(--c-line), var(--c-line)) right top / 34px 1px no-repeat;
+  height: calc(17 * var(--u));
+  background: linear-gradient(var(--line), var(--line)) right top / calc(19 * var(--u)) 1px no-repeat;
 }
 .cv-photo__tail::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
-  right: 65px;
+  right: calc(36 * var(--u));
   height: 1px;
-  background: var(--c-line);
+  background: var(--line);
 }
 .cv-photo__tail::after {
   content: "";
   position: absolute;
   top: 0;
-  right: 34px;
-  width: 31px;
-  height: 31px;
-  background: url("../assets/icons/bubble-tail.svg") no-repeat;
+  right: calc(19 * var(--u));
+  width: calc(17 * var(--u));
+  height: calc(17 * var(--u));
+  background:
+    linear-gradient(var(--line), var(--line)) left top / 1px 100% no-repeat,
+    linear-gradient(to bottom right, transparent calc(50% - .6px), var(--line) calc(50% - .6px), var(--line) calc(50% + .6px), transparent calc(50% + .6px));
 }
 .cv-photo img {
   width: 100%;
   height: auto;
-  aspect-ratio: 300 / 306;
+  aspect-ratio: 300 / 262;
   object-fit: cover;
-  object-position: center bottom;
+  object-position: center top;
 }
 
 
 /* Contact strip */
 .cv-contact {
-  padding-inline: 14mm;
-  border-bottom: 1px solid var(--c-line);
+  padding-inline: var(--edge);
+  border-bottom: 1px solid var(--line);
 }
 .cv-contact ul {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-inline: 1px solid var(--c-line);
+  border-inline: 1px solid var(--line);
 }
 .cv-contact li {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: calc(7 * var(--u));
   min-width: 0;
-  padding: 7px var(--pad);
+  padding: calc(6 * var(--u)) calc(14 * var(--u));
+  font-size: calc(10 * var(--u));
 }
 .cv-contact li:nth-child(3n + 2),
-.cv-contact li:nth-child(3n + 3) { border-left: 1px solid var(--c-line); }
-.cv-contact li:nth-child(n + 4) { border-top: 1px solid var(--c-line); }
-.cv-contact__label { flex: none; color: var(--c-lime); font-weight: 700; }
+.cv-contact li:nth-child(3n + 3) { border-left: 1px solid var(--line); }
+.cv-contact li:nth-child(n + 4) { border-top: 1px solid var(--line); }
+.cv-contact__label { flex: none; color: var(--accent); font-weight: 700; }
 .cv-contact a,
 .cv-contact li > span:last-child { overflow-wrap: anywhere; }
 
 
-/* Columns: the left one (page 1 only) and the experience */
+/* Columns: skills / tools / education / credentials, and the experience */
 .cv-cols {
   flex: 1 1 0;
   min-height: 0;
   display: grid;
-  grid-template-columns: 58mm minmax(0, 1fr);
-  column-gap: 6mm;
-  padding-inline: 14mm;
+  grid-template-columns: calc(172 * var(--u)) minmax(0, 1fr);
+  column-gap: calc(18 * var(--u));
+  padding-inline: var(--edge);
   overflow: hidden;
 }
-
-.cv-cols--wide { grid-template-columns: minmax(0, 1fr); }   /* pages 2+: no left column, the experience takes the full width */
+.cv-cols--wide { grid-template-columns: minmax(0, 1fr); }   /* extra pages (only if a lot is added): no left column */
 
 .cv-side {
   display: flex;
   flex-direction: column;
+  border-inline: 1px solid var(--line);
 }
-.cv-side .card { gap: 10px; }
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: calc(10 * var(--v));
+  padding: calc(14 * var(--v));
+  border-top: 1px solid var(--line);
+}
+.card:first-child { border-top: 0; }
+
+.heading { color: var(--accent); font: 700 calc(19 * var(--v)) / 1.1 var(--font-display); }
+
+.list { display: flex; flex-direction: column; gap: calc(5 * var(--v)); }
+.list--items { gap: calc(9 * var(--v)); }
+.list--tools li { display: flex; align-items: center; gap: calc(8 * var(--v)); }
+.list--tools span { white-space: nowrap; }
+.list img { flex: none; width: calc(14 * var(--v)); height: calc(14 * var(--v)); }
+.list img[src*="education"],
+.list img[src*="credential"] { filter: brightness(.5); }     /* the pale-lime icons, darker for paper */
+
+.item { display: flex; align-items: flex-start; gap: calc(8 * var(--v)); }
+.item__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: calc(3 * var(--v)); overflow-wrap: break-word; }
+.item__title { font-weight: 700; }
 
 .cv-main {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: var(--pad) var(--pad) 0;
-  border-inline: 1px solid var(--c-line);
+  gap: calc(8 * var(--v));
+  padding: calc(14 * var(--v)) calc(14 * var(--v)) 0;
+  border-inline: 1px solid var(--line);
 }
 
-/* Tighter spacing than the website, and smaller icons */
-.sheet .list { gap: 6px; }
-.sheet .list--items { gap: 10px; }
-.sheet .item { gap: 8px; }
-.sheet .item__body { gap: 4px; }
-.sheet .list img { width: 14px; height: 14px; }
-.sheet .btn { gap: 8px; padding: 5px 9px; }
-.sheet .btn img { width: 14px; height: 14px; }
-
-.sheet .job {
-  gap: 8px;
-  padding-block: 12px;                         /* the site's hover maths isn't used here */
+.job {
+  display: flex;
+  flex-direction: column;
+  gap: calc(6 * var(--v));
+  padding-block: calc(10 * var(--v));
+  border-top: 1px solid var(--line);
 }
-.sheet .job__head { gap: 2px; }
-.sheet .job__body { gap: 8px; }
-.sheet .job__text { gap: .8em; }
+.job:first-of-type { border-top: 0; }           /* the lines separate the jobs; none above the first */
+.job__company { font: 400 calc(18 * var(--v)) / 1.1 var(--font-display); overflow-wrap: anywhere; }
+.job--esx .job__company         { color: #857c00; }     /* the employers' colours, darkened for paper */
+.job--zupria .job__company      { color: #c25a00; }
+.job--oracle .job__company      { color: #d40000; }
+.job--blueberryad .job__company { color: #4a4cc4; }
+.job--smash .job__company       { color: #7d2fb8; }
+.job__head { display: flex; flex-direction: column; gap: calc(2 * var(--v)); }
+.job__role { font-size: calc(11.5 * var(--v)); font-weight: 700; }
+.job__head p:not(.job__role) { color: var(--muted); }
+.job__body { display: flex; flex-direction: column; gap: calc(6 * var(--v)); }
+.job__text { display: grid; gap: .7em; }
+.label { margin-inline-end: .4em; }
 
-/* No hover motion in the CV */
-.sheet .list--tools span { transform: none; transition: none; }
-.sheet .btn img { transition: none; transform: none; }
 
-
-/* Narrow screens: the pages are shrunk to fit (see --fit), so only the bar needs a tweak */
-@media screen and (max-width: 520px) {
-  .cv-bar { padding-inline: 12px; }
-  .cv-bar .btn { padding-inline: 10px; }
-}
-
-
-/* Print: just the pages, edge to edge, one per sheet of paper
+/* Print: just the page, scaled to whatever paper and margins the browser uses
    ========================================================================== */
 @media print {
-  html.cv { background: var(--c-dark); }
+  html.cv,
+  body { background: #fff; }
   .cv-bar { display: none; }
   .cv-sheets {
-    zoom: 1;
     display: block;
     padding: 0;
   }
-  .sheet { box-shadow: none; }
+  .sheet {
+    width: min(100vw, max(100mm, calc(100vh / 1.4124)));   /* fits the printable width AND height */
+    margin-inline: auto;
+    box-shadow: none;
+  }
 }

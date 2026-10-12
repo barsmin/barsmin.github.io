@@ -7,8 +7,15 @@
   const PHONE = { label: "phone", text: "+40 754 577 311", href: "tel:+40754577311" };
   const ADDRESS = { label: "address", text: "Bucharest, Romania" };
 
-  const A4_WIDTH_PX = 210 * 96 / 25.4;
+  // Everything must fit on ONE page: the text and spacing of the columns shrink (never below K_MIN)
+  // until it does. Only if even that is not enough do the last jobs move to a second page.
+  const K_MAX = 1;
+  const K_MIN = 0.7;
+  const BOTTOM_ROOM = 22;           // free space kept under the last block, in "CV pixels" (794 per page width)
+  const SHEET_PX = 794;
+
   const root = document.getElementById("sheets");
+  const sheets = [];
 
   const el = (tag, className, html) => {
     const node = document.createElement(tag);
@@ -51,23 +58,28 @@
   };
 
 
-  // 3. Build page 1: intro, contact, skills / tools / education / credentials, and the experience heading
-  const buildFirstSheet = (site) => {
+  // 3. Pages
+  const newSheet = () => {
     const sheet = el("section", "sheet");
+    const page = el("div", "sheet__page");
+    sheet.append(page);
+    root.append(sheet);
+    sheets.push(sheet);
+    return { sheet, page };
+  };
+
+  // Page 1: intro, contact, skills / tools / education / credentials, and the experience
+  const buildFirstSheet = (site) => {
+    const { sheet, page } = newSheet();
 
     // intro
-    const titleLines = [
-      site.querySelector(".hero__title > span").textContent.trim(),
-      JSON.parse(site.querySelector("[data-typed]").dataset.typed)[0],
-    ];
     const photo = site.querySelector(".hero__photo");
-
     const head = el("header", "cv-head");
     const intro = el("div", "cv-intro");
     const title = el("h1", "cv-title");
     title.append(el("span"), el("span", "accent"));
-    title.children[0].textContent = titleLines[0];
-    title.children[1].textContent = titleLines[1];
+    title.children[0].textContent = site.querySelector(".hero__title > span").textContent.trim();
+    title.children[1].textContent = JSON.parse(site.querySelector("[data-typed]").dataset.typed)[0];
     intro.append(title, el("p", "cv-lead", site.querySelector(".hero__lead").innerHTML));
 
     const figure = el("figure", "cv-photo");
@@ -77,7 +89,7 @@
     image.src = photo.getAttribute("src");
     image.alt = photo.getAttribute("alt") || "";
     image.width = 300;
-    image.height = 306;
+    image.height = 262;
     figure.append(hello, el("div", "cv-photo__tail"), image);
     head.append(intro, figure);
 
@@ -103,57 +115,94 @@
     site.querySelectorAll(".sidebar > .card").forEach((card) => {
       const copy = document.importNode(card, true);
       copy.removeAttribute("data-reveal-group");
+      copy.querySelectorAll(".btn").forEach((button) => button.remove());   // no buttons on paper
       side.append(copy);
     });
     const main = el("div", "cv-main");
-    const heading = site.querySelector(".experience > .heading");
-    main.append(document.importNode(heading, true));
+    main.append(document.importNode(site.querySelector(".experience > .heading"), true));
     cols.append(side, main);
 
-    sheet.append(head, contact, cols);
+    page.append(head, contact, cols);
     return sheet;
   };
 
+  // Extra page: only used if so much is added to the site that one page can't hold it
   const newContinuationSheet = () => {
-    const sheet = el("section", "sheet");
+    const { sheet, page } = newSheet();
     const cols = el("div", "cv-cols cv-cols--wide");
     cols.append(el("div", "cv-main"));
-    sheet.append(cols);
+    page.append(cols);
     return sheet;
   };
 
 
-  // 4. Pour the jobs into the pages: when one doesn't fit, it starts the next page
-  const overflows = (sheet) => {
+  // 4. Fit: the space left under the last block of the columns, in "CV pixels"
+  const room = (sheet) => {
     const cols = sheet.querySelector(".cv-cols");
-    return cols.scrollHeight > cols.clientHeight + 1;
-  };
-
-  const paginate = (sheets, jobs) => {
-    let sheet = sheets[0];
-    let main = sheet.querySelector(".cv-main");
-
-    jobs.forEach((job) => {
-      main.append(job);
-      const alone = main.querySelectorAll(".job").length === 1;
-      if (overflows(sheet) && !alone) {
-        sheet = newContinuationSheet();
-        sheets.push(sheet);
-        root.append(sheet);
-        main = sheet.querySelector(".cv-main");
-        main.append(job);
-      }
+    let bottom = 0;
+    [...cols.children].forEach((column) => {
+      const last = column.lastElementChild;
+      if (last) bottom = Math.max(bottom, last.getBoundingClientRect().bottom);
     });
+    return (cols.getBoundingClientRect().bottom - bottom) / (sheet.getBoundingClientRect().width / SHEET_PX);
+  };
 
-    sheets.forEach((s, i) => s.setAttribute("aria-label", "CV, page " + (i + 1) + " of " + sheets.length));
-    if (overflows(sheets[0])) console.warn("[cv] The first page's left column is too long for one page.");
+  // Finds the largest text scale at which everything fits. Measured at the real A4 size, whatever the screen,
+  // so the result is the same on a phone and on a desktop. Returns false if even the smallest scale doesn't fit.
+  const fitSheet = (sheet) => {
+    const page = sheet.firstElementChild;
+    const widthBefore = sheet.style.width;
+    sheet.style.width = "210mm";
+
+    const fits = (k) => {
+      page.style.setProperty("--k", k);
+      return room(sheet) >= BOTTOM_ROOM;
+    };
+
+    let k = K_MAX;
+    let ok = fits(K_MAX);
+    if (!ok) {
+      ok = fits(K_MIN);
+      k = K_MIN;
+      if (ok) {
+        let low = K_MIN, high = K_MAX;
+        for (let i = 0; i < 14; i++) {
+          const mid = (low + high) / 2;
+          if (fits(mid)) low = mid; else high = mid;
+        }
+        k = low;
+      }
+    }
+    page.style.setProperty("--k", k.toFixed(3));
+    sheet.style.width = widthBefore;
+    return ok;
+  };
+
+  const jobsOf = (sheet) => sheet.querySelectorAll(".cv-main .job");
+
+  const layout = () => {
+    for (let i = 0; i < sheets.length; i++) {
+      while (!fitSheet(sheets[i]) && jobsOf(sheets[i]).length > 1) {
+        console.warn("[cv] Too much content for one page: the last job moves to the next page.");
+        const jobs = jobsOf(sheets[i]);
+        if (!sheets[i + 1]) newContinuationSheet();
+        sheets[i + 1].querySelector(".cv-main").prepend(jobs[jobs.length - 1]);
+      }
+    }
+    sheets.forEach((sheet, i) => sheet.setAttribute("aria-label", "CV, page " + (i + 1) + " of " + sheets.length));
   };
 
 
-  // 5. Screen only: shrink the pages to fit narrow screens
-  const fit = () => {
-    const room = document.documentElement.clientWidth - 24;
-    root.style.setProperty("--fit", Math.min(1, room / A4_WIDTH_PX).toFixed(4));
+  // 5. Fonts and photo must be ready before measuring (the web fonts change the line lengths)
+  const assetsReady = async (sheet) => {
+    const loads = [];
+    if (document.fonts) {
+      ['400 10px "Inter Tight"', '700 10px "Inter Tight"', '400 10px "Space Grotesk"', '700 10px "Space Grotesk"']
+        .forEach((font) => loads.push(document.fonts.load(font, "Aa—’&").catch(() => [])));
+    }
+    sheet.querySelectorAll("img").forEach((img) => loads.push(img.decode().catch(() => {})));
+    await Promise.race([Promise.all(loads), new Promise((resolve) => setTimeout(resolve, 3500))]);
+    if (document.fonts) await document.fonts.ready;
   };
 
 
@@ -165,19 +214,17 @@
     try {
       const site = await loadSite();
 
+      root.replaceChildren();
       const first = buildFirstSheet(site);
-      root.replaceChildren(first);
+      const main = first.querySelector(".cv-main");
+      site.querySelectorAll(".experience .job").forEach((job) => main.append(document.importNode(job, true)));
 
-      await Promise.all([
-        document.fonts ? document.fonts.ready : Promise.resolve(),
-        ...[...first.querySelectorAll("img")].map((img) => img.decode().catch(() => {})),
-      ]);
+      await assetsReady(first);
+      layout();
 
-      const jobs = [...site.querySelectorAll(".experience .job")].map((job) => document.importNode(job, true));
-      paginate([first], jobs);
+      // a late font would change the line lengths: fit again
+      if (document.fonts) document.fonts.addEventListener("loadingdone", () => sheets.forEach(fitSheet));
 
-      fit();
-      window.addEventListener("resize", fit);
       document.documentElement.setAttribute("data-cv-ready", "");
 
       // Opened from the "download cv" button: show the print / save-as-PDF dialog straight away

@@ -217,7 +217,7 @@ strong { font-weight: 700; }
 .cv-photo img {
   width: 100%;
   height: auto;
-  aspect-ratio: 300 / 262;
+  aspect-ratio: 300 / 306;
   object-fit: cover;
   object-position: center top;
 }
@@ -321,8 +321,8 @@ strong { font-weight: 700; }
     display: block;
     padding: 0;
   }
-  .sheet {
-    width: min(100vw, max(100mm, calc(100vh / 1.4124)));   /* fits the printable width AND height */
+  .sheet {                                      /* as wide as the paper allows (max A4): no viewport units, they are unreliable in print */
+    width: min(100%, 210mm);
     margin-inline: auto;
     box-shadow: none;
   }

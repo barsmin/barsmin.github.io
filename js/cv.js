@@ -13,7 +13,7 @@
   // until it does. Only if even that is not enough do the last jobs move to a second page.
   const K_MAX = 1;
   const K_MIN = 0.7;
-  const BOTTOM_ROOM = 22;           // free space kept under the last block, in "CV pixels" (794 per page width)
+  const BOTTOM_ROOM = 28;           // free space kept under the last block, in "CV pixels" (794 per page width)
   const SHEET_PX = 794;
 
   const root = document.getElementById("sheets");
@@ -82,7 +82,9 @@
     title.append(el("span"), el("span"));
     title.children[0].textContent = site.querySelector(".hero__title > span").textContent.trim();
     title.children[1].textContent = JSON.parse(site.querySelector("[data-typed]").dataset.typed)[0];
-    intro.append(title, el("p", "cv-lead", site.querySelector(".hero__lead").innerHTML));
+    const lead = el("p", "cv-lead");
+    lead.textContent = site.querySelector(".hero__lead").textContent.trim();
+    intro.append(title, lead);
 
     const figure = el("figure", "cv-photo");
     const hello = el("figcaption", "cv-photo__hello");
@@ -91,7 +93,7 @@
     image.src = PHOTO;
     image.alt = photo.getAttribute("alt") || "";
     image.width = 300;
-    image.height = 262;
+    image.height = 306;
     figure.append(hello, el("div", "cv-photo__tail"), image);
     head.append(intro, figure);
 
@@ -219,7 +221,11 @@
       root.replaceChildren();
       const first = buildFirstSheet(site);
       const main = first.querySelector(".cv-main");
-      site.querySelectorAll(".experience .job").forEach((job) => main.append(document.importNode(job, true)));
+      site.querySelectorAll(".experience .job").forEach((job) => {
+        const copy = document.importNode(job, true);
+        copy.querySelectorAll("wbr").forEach((hint) => hint.remove());
+        main.append(copy);
+      });
 
       await assetsReady(first);
       layout();

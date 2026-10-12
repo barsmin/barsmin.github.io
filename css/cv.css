@@ -2,7 +2,7 @@
    barsmin — CV (cv.html)
    --------------------------------------------------------------------------
    A white, ink-friendly version of the site's look: same fonts, same grid
-   lines, same lime accent (darkened so it reads on paper).
+   lines, same lime accent and employer colours.
 
    The page is one A4 sheet that sizes itself from its own width, so it keeps
    its proportions on a phone screen and on any paper size or margin a browser
@@ -140,7 +140,7 @@ strong { font-weight: 700; }
   --ink: #111315;
   --muted: #4b5257;
   --line: rgba(17, 19, 21, .2);
-  --accent: #3d7a00;                            /* the site's lime, darkened for paper */
+  --accent: #b5ff6d;                            /* the site's lime */
 
   position: absolute;
   inset: 0;
@@ -283,8 +283,6 @@ strong { font-weight: 700; }
 .list--tools li { display: flex; align-items: center; gap: calc(8 * var(--v)); }
 .list--tools span { white-space: nowrap; }
 .list img { flex: none; width: calc(14 * var(--v)); height: calc(14 * var(--v)); }
-.list img[src*="education"],
-.list img[src*="credential"] { filter: brightness(.5); }     /* the pale-lime icons, darker for paper */
 
 .item { display: flex; align-items: flex-start; gap: calc(8 * var(--v)); }
 .item__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: calc(3 * var(--v)); overflow-wrap: break-word; }
@@ -307,10 +305,10 @@ strong { font-weight: 700; }
 }
 .job:first-of-type { border-top: 0; }           /* the lines separate the jobs; none above the first */
 .job__company { font: 400 calc(18 * var(--v)) / 1.1 var(--font-display); overflow-wrap: anywhere; }
-.job--esx .job__company         { color: #857c00; }     /* the employers' colours, darkened for paper */
-.job--zupria .job__company      { color: #c25a00; }
-.job--oracle .job__company      { color: #d40000; }
-.job--blueberryad .job__company { color: #4a4cc4; }
+.job--esx .job__company         { color: #eded02; }     /* the employers' colours, as on the site */
+.job--zupria .job__company      { color: #f57200; }
+.job--oracle .job__company      { color: #ff0000; }
+.job--blueberryad .job__company { color: #6e70e3; }
 .job--smash .job__company       { color: #7d2fb8; }
 .job__head { display: flex; flex-direction: column; gap: calc(2 * var(--v)); }
 .job__role { font-size: calc(11.5 * var(--v)); font-weight: 700; }

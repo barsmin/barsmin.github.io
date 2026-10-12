@@ -83,7 +83,11 @@
         <figure class="hero__card" data-reveal-group>
           <figcaption class="hero__hello">Hi! I’m Cosmin</figcaption>
           <div class="hero__tail" aria-hidden="true"></div>
-          <img class="hero__photo" src="assets/images/profile.png" alt="Portrait of Cosmin" width="300" height="306" fetchpriority="high">
+          <picture>
+            <source srcset="assets/images/profile.avif" type="image/avif">
+            <source srcset="assets/images/profile.webp" type="image/webp">
+            <img class="hero__photo" src="assets/images/profile.png" alt="Portrait of Cosmin" width="300" height="306" fetchpriority="high">
+          </picture>
         </figure>
 
         <div class="col-line hero__col-b" aria-hidden="true"></div>

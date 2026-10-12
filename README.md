@@ -12,9 +12,11 @@ No build step, so it works as-is on GitHub Pages: https://barsmin.github.io/
 
 ## Profile photo
 
-The photo is `assets/images/profile.png` (export the **profile 2** layer from Figma as PNG @2x, keep the transparent background). To change it, replace that file with the same name.
+The photo exists in three formats in `assets/images/`: `profile.avif` (~30 KB), `profile.webp` (~40 KB) and `profile.png` (~75 KB, the fallback for very old browsers). The page uses a `<picture>` tag, so every browser downloads only the smallest one it understands (the old PNG was 160 KB). The CV uses the same files.
 
-Photo not showing? Open `https://barsmin.github.io/assets/images/profile.png` directly. If that is a 404, check that the file is inside `assets/images/`, is named exactly `profile.png` (on Windows turn on *View → File name extensions*: it may really be `profile.png.png`) and is pushed. GitHub Pages needs about a minute, then hard-refresh (Ctrl/Cmd + Shift + R).
+All three are the same image, 720 px wide with a transparent background. To change the photo, send the new PNG (transparent background, at least ~1200 px wide) and re-export all three, otherwise browsers will keep showing the old one from the first format they support. The photo area on the page is 300×306 px (about 478 px wide on tablets), so 720 px is already sharp on phones and retina screens.
+
+Photo not showing? Open `https://barsmin.github.io/assets/images/profile.png` directly. If that is a 404, check that the files are inside `assets/images/`, named exactly like above (on Windows turn on *View → File name extensions*) and pushed. GitHub Pages needs about a minute, then hard-refresh (Ctrl/Cmd + Shift + R).
 
 ## Typewriter text
 
@@ -36,7 +38,7 @@ All of these live in section 12b of `css/styles.css`.
 
 The "download cv" button opens `cv.html` in a new tab, which shows the print / save-as-PDF dialog straight away (the "save as PDF / print" button on that page opens it again, and "back to site" returns to the home page). In the dialog choose **Save as PDF** or a printer.
 
-The CV is a **white, ink-friendly, single A4 page** in the site's style (same fonts, grid lines and accent, with the lime and the employer colours darkened so they read on paper). It has no logo, menu, buttons or footer. It is built live from the content of `index.html` (title, intro, photo, skills, tools, education, credentials and every job), so editing the text on the home page updates the CV. Nothing else to maintain.
+The CV is a **white, ink-friendly, single A4 page** in the site's style (same fonts, grid lines, lime accent and employer colours as the site). It has no logo, menu, buttons or footer. It is built live from the content of `index.html` (title, intro, photo, skills, tools, education, credentials and every job), so editing the text on the home page updates the CV. Nothing else to maintain.
 
 - **One page:** `js/cv.js` shrinks the text and spacing of the two columns (down to 70% of the nominal size, set at the top of the file) until everything fits. Add a lot more content and the text gets smaller; only past that limit does the last job move to a second page (the browser console says so).
 - **Any paper:** the page scales itself to the paper and margins the browser prints with (A4, Letter, phone print dialogs that add their own margins), so it stays one page. If the colours or the speech-bubble lines are missing, tick **Background graphics** in the print options.
@@ -79,7 +81,7 @@ css/cv.css            the CV: white A4 sheet, scaling and print rules (self-cont
 js/main.js            footer year, contact button, typewriter, scroll reveal
 js/cv.js              builds the CV from index.html; phone and address live here
 assets/icons/         SVGs exported from Figma (logo.svg = full logo, logo-mobile.svg = small "ba" mark used on phones)
-assets/images/        profile.png
+assets/images/        profile.avif / .webp / .png (the same photo in three formats)
 favicon.svg           browser-tab icon (the "ba" mark)
 apple-touch-icon.png  iPhone home-screen icon
 ```

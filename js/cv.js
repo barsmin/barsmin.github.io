@@ -85,12 +85,15 @@
     const figure = el("figure", "cv-photo");
     const hello = el("figcaption", "cv-photo__hello");
     hello.textContent = site.querySelector(".hero__hello").textContent.trim();
-    const image = el("img");
-    image.src = photo.getAttribute("src");
+    // the same <picture> as the site (AVIF / WebP / PNG), so the small files are used here too
+    const picture = document.importNode(photo.closest("picture") || photo, true);
+    const image = picture.matches("img") ? picture : picture.querySelector("img");
+    image.removeAttribute("class");
+    image.removeAttribute("fetchpriority");
     image.alt = photo.getAttribute("alt") || "";
     image.width = 300;
     image.height = 262;
-    figure.append(hello, el("div", "cv-photo__tail"), image);
+    figure.append(hello, el("div", "cv-photo__tail"), picture);
     head.append(intro, figure);
 
     // contact
